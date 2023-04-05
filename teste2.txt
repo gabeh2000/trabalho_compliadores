@@ -1,0 +1,10 @@
+NULL
+===protected2
+aleatoriedade int
+<<
+protected
+2
+44.09
+**
+staticstactic
+static

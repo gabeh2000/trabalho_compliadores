@@ -89,7 +89,11 @@ typedef int Node_type;
 #define maioriguallex_node 561
 #define igualex_node 562
 #define diferentelex_node 563
-
+#define for_node 564
+#define forlex_node 565
+#define atribuicaolex_node 566
+#define aux_node 567
+#define calc_node 568
 
 
 /** Estrutura de dados parcial para o no da arvore. */

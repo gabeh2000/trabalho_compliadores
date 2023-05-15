@@ -19,23 +19,26 @@ Node* create_node(int nl, Node_type t, char* lexeme,  /* Node* children */ ...)
     int n_args = 0;
     const Node* arg = va_arg(ap, const Node*);
     for (;  arg != NULL;  arg = va_arg(ap, const Node*)) {
-        printf("Recebi um '%s'\n", arg);
+        //printf("Recebi um '%s'\n", arg);
         n_args ++;
     }
+	//printf("adicionei nmr");
 	new_node->n_child = n_args;
     va_end(ap);
-    va_start(valist, lexeme);
+    va_start(ap, lexeme);
+	//printf("segundo start");
+    new_node->children = (Node**)malloc(sizeof(Node*)*n_args);
 
-    new_node->children = (Node**)malloc(sizeof(Node*)*n_child);
-
-    for(int i = 0; i < n_child; i++){
-        Node *aux = va_arg(valist, Node *);
+    for(int i = 0; i < n_args; i++){
+        Node *aux = va_arg(ap, Node *);
         //aux->dad = new_node;
         new_node->children[i] = aux;
     }
 
-    va_end(valist);
-
+    va_end(ap);
+	new_node->type=t;
+	new_node->line_num=nl;
+	//printf("cheguei no fim da cracao");
 	return new_node;
 }
 
@@ -97,24 +100,23 @@ int height(Node* n)
 
 void uncompile(FILE* outfile, Node *n)
 {
-	if(n != NULL)
+	/*if(n != NULL)
 	{
 		//Code ...
-		for(int i = 0; i < n->n_child; i++)
-    {
-        for (int i = 0; i < level; i++)
-            fprintf(outfile, "\t");
+		for(int i = 0; i < n->n_child; i++){
+			for (int i = 0; i < level; i++)
+				fprintf(outfile, "\t");
 
-        fprintf(outfile ,"Node: %s\n", n->lexeme);
+			fprintf(outfile ,"Node: %s\n", n->lexeme);
 
-        if (!is_leaf(n->children[i]))
-        {
-            for (int i = 0; i < level; i++)
-                fprintf(outfile, "\t");
+			if (!is_leaf(n->children[i]))
+			{
+				for (int i = 0; i < level; i++)
+					fprintf(outfile, "\t");
 
-            fprintf(outfile, "Children:\n");
-            uncompile(outfile, n->children[i], level + 1);
-        }
-    }
-	}
+				fprintf(outfile, "Children:\n");
+				uncompile(outfile, n->children[i], level + 1);
+			}
+    	}
+	}*/
 }

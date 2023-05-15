@@ -10,7 +10,13 @@
     #include "tokens.h"
   
 %}
- 
+
+%option yylineno
+%{
+#define YY_USER_ACTION yylloc.first_line = yylineno;
+#define YY_USER_INIT yylineno = 1;
+%}
+
   /* Definicoes regulares (A COMPLETAR conforme a especificacao) */
 digito     [0-9]
 inteiro    ("-")?{digito}+

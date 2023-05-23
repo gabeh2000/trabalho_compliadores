@@ -94,6 +94,7 @@ typedef int Node_type;
 #define atribuicaolex_node 566
 #define aux_node 567
 #define calc_node 568
+#define else_node 569
 
 
 /** Estrutura de dados parcial para o no da arvore. */

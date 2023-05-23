@@ -3,7 +3,6 @@
 %option noyywrap
   /* Sera copiado no .c final */
 %{
-    #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
    
@@ -14,11 +13,10 @@
 %}
 
 %option yylineno
-%option noyywrap
-/*%{
+%{
 #define YY_USER_ACTION yylloc.first_line = yylineno;
 #define YY_USER_INIT yylineno = 1;
-%} */
+%}
 
   /* Definicoes regulares (A COMPLETAR conforme a especificacao) */
 digito     [0-9]

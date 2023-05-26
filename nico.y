@@ -76,6 +76,8 @@
 %type<no> calc
 %type<no> AUX_idf_val
 %type<no> ifelse
+%type<no> comando
+
 
 /* demais types ... */
 
@@ -84,8 +86,11 @@
  /* A completar com seus tokens - compilar com 'yacc -d' */
 
 %%
-code: declaracoes acoes {  $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL); syntax_tree = $$;}
-| acoes { $$ = $1; syntax_tree = $$;  };
+code: comando{ $$ = create_node(@1.first_line, 0, "Root", $1, NULL); syntax_tree = $$; };
+
+comando: { $$ = create_node(1, 0, "Vazio", NULL); } 
+| declaracoes code {  $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL);}
+| acoes code{ $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL); };
 
 declaracoes: declaracao SEMICOLON{ 
 	Node *no_SEMICOLON = create_node(@1.first_line, pontoevirgula_node,  $2, NULL);

@@ -882,7 +882,7 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 41 "scanner.l"
-{ return(INT); }
+{printf("INT\n"); return(INT); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
@@ -952,7 +952,7 @@ YY_RULE_SETUP
 case 15:
 YY_RULE_SETUP
 #line 55 "scanner.l"
-{ return(PAROPN);}
+{ printf("ABRE PAR\n");return(PAROPN);}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
@@ -987,17 +987,17 @@ YY_RULE_SETUP
 case 22:
 YY_RULE_SETUP
 #line 62 "scanner.l"
-{ return(KOPN);}
+{ printf("ABRE CHAVE\n"); return(KOPN);}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 63 "scanner.l"
-{ return(KCLOSE);}
+{ printf("FECHA CHAVE\n");return(KCLOSE);}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 64 "scanner.l"
-{ return(LESS);}
+{ printf("MENOR\n");return(LESS);}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
@@ -1032,7 +1032,7 @@ YY_RULE_SETUP
 case 31:
 YY_RULE_SETUP
 #line 71 "scanner.l"
-{ return(SEMICOLON);}
+{ printf("PNT VIRGULA\n"); return(SEMICOLON);}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
@@ -1047,7 +1047,7 @@ YY_RULE_SETUP
 case 34:
 YY_RULE_SETUP
 #line 74 "scanner.l"
-{ return( IF ); }
+{ printf("IF\n"); return( IF ); }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
@@ -1112,17 +1112,17 @@ YY_RULE_SETUP
 case 47:
 YY_RULE_SETUP
 #line 87 "scanner.l"
-{ return(INT_LIT);}
+{ printf("INTEIRO\n");return(INT_LIT);}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
 #line 88 "scanner.l"
-{ return(F_LIT);}
+{ printf("NUM\n");return(F_LIT);}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
 #line 89 "scanner.l"
-{ return(IDF);}
+{ printf("VAR\n");return(IDF);}
 	YY_BREAK
 case 50:
 /* rule 50 can match eol */

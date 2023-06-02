@@ -37,7 +37,7 @@ text        ["]([^"\\\n]|\\.|\\\n)*["]
   * Ver tambem "tokens.h".
   */
 
-int    { return(INT); }
+int    {printf("INT\n"); return(INT); }
 double { return(DOUBLE);}
 char   { return(CHAR); }
 float  { return(FLOAT); }
@@ -51,26 +51,26 @@ string  { return(STRING); }
 "]"    { return(BRAKCLOSE);}
 "["    { return(BRAKOPN);}
 ")"    { return(PARCLOSE);}
-"("    { return(PAROPN);}
+"("    { printf("ABRE PAR\n");return(PAROPN);}
 "+"    { return(PLUS);}
 "\'"   { return(QUOTE);}
 "\""   { return(DQUOTE);}
 "-"    { return(MIN);}
 "/"    { return(BAR);}
 "*"    { return(AST);}
-"{"    { return(KOPN);}
-"}"    { return(KCLOSE);}
-"<"    { return(LESS);}
+"{"    { printf("ABRE CHAVE\n"); return(KOPN);}
+"}"    { printf("FECHA CHAVE\n");return(KCLOSE);}
+"<"    { printf("MENOR\n");return(LESS);}
 ">"    { return(GREAT);}
 "<="   { return( LE ) ; }
 ">="   { return(GE);}
 "=="   { return(EQ);}
 "!="   { return(NE);}
 "!"    { return(NOT);}
-";"    { return(SEMICOLON);}
+";"    { printf("PNT VIRGULA\n"); return(SEMICOLON);}
 or     { return(OR);}
 and    { return(AND);}
-if     { return( IF ); }
+if     { printf("IF\n"); return( IF ); }
 then   { return(THEN);}
 else   { return(ELSE); }
 while  { return (WHILE); }
@@ -83,9 +83,9 @@ void    { return(VOID);}
 "NULL"    { return(NUL);}
 const    { return(CONST);}
 static    { return(STATIC);}
-{inteiro}   { return(INT_LIT);}
-{num}     { return(F_LIT);}
-{var}    { return(IDF);}
+{inteiro}   { printf("INTEIRO\n");return(INT_LIT);}
+{num}     { printf("NUM\n");return(F_LIT);}
+{var}    { printf("VAR\n");return(IDF);}
 {text}    { return(TEXT);}
 [ \n\t]+ { printf("BRANCO\n"); }
 

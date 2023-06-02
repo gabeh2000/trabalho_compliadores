@@ -70,7 +70,7 @@
 %type<no> att
 %type<no> expressao
 %type<no> expr
-%type<no> AUX_expr
+//%type<no> AUX_expr
 %type<no> and_or
 %type<no> comparador
 %type<no> calc
@@ -101,12 +101,12 @@ declaracao: tipo IDF { Node *no_IDF = create_node(@1.first_line, declaracao_node
 $$ = create_node(@1.first_line, declaracao_node, NULL, $1, no_IDF, NULL);} 
 | tipo att {$$ = create_node(@1.first_line, declaracao_node, NULL, $1, $2, NULL);} ;
 
-tipo: INT {Node *no_INT = create_node(@1.first_line, int_node, $1, NULL);
-	$$ = create_node(@1.first_line, int_node, NULL, no_INT, NULL);} 
-| FLOAT {Node *no_FLOAT = create_node(@1.first_line, float_node, $1, NULL);
-	$$ = create_node(@1.first_line, float_node, NULL, no_FLOAT, NULL);} 
-| CHAR {Node *no_CHAR = create_node(@1.first_line, char_node, $1, NULL);
-	$$ = create_node(@1.first_line, char_node, NULL, no_CHAR, NULL);} ;
+tipo: INT {
+	$$ = create_node(@1.first_line, int_node, $1, NULL);} 
+| FLOAT {
+	$$ = create_node(@1.first_line, float_node, $1, NULL);} 
+| CHAR {
+	$$ = create_node(@1.first_line, char_node, $1, NULL);} ;
 
 acoes: for {$$ = create_node(@1.first_line, for_node, NULL, $1, NULL);} 
 | while {$$ = create_node(@1.first_line, while_node, NULL, $1, NULL);}
@@ -156,7 +156,7 @@ ifelse: if ELSE KOPN code KCLOSE {
 
 /*att: IDF ATRIB VALOR {$$ = create_node(@1.first_line, atribuicaolex_node, NULL, $1, $2, $3, NULL);}
 | IDF ATRIB calc {$$ = create_node(@1.first_line, atribuicaolex_node, NULL, $1, $2, $3, NULL);} ;*/
-att: IDF ATRIB AUX_expr {
+att: IDF ATRIB calc {
 	Node *no_IDF = create_node(@1.first_line, idf_node, $1, NULL);
 	Node *no_ATRIB = create_node(@1.first_line, atribuicao_node,  $2, NULL);
 	$$ = create_node(@1.first_line, atribuicaolex_node, NULL, no_IDF, no_ATRIB, $3, NULL);};
@@ -164,43 +164,35 @@ att: IDF ATRIB AUX_expr {
 expressao: expr {$$ = create_node(@1.first_line, expr_node, NULL, $1, NULL);} 
 | expr and_or expressao {$$ = create_node(@1.first_line, expr_node, NULL, $1, $2, $3, NULL);};
 
-and_or: AND {Node *no_AND = create_node(@1.first_line, and_node, $1, NULL);
-$$ = create_node(@1.first_line, and_node, NULL, no_AND, NULL);} 
-| OR {Node *no_OR = create_node(@1.first_line, or_node, $1, NULL);
-	$$ = create_node(@1.first_line, or_node, NULL, no_OR, NULL);} ;
+and_or: AND {
+$$ = create_node(@1.first_line, and_node, $1, NULL);} 
+| OR {
+	$$ = create_node(@1.first_line, or_node, $1, NULL);} ;
 
-expr: AUX_expr comparador AUX_expr {$$ = create_node(@1.first_line, aux_node, NULL, $1, $2, $3, NULL);} 
+expr: calc comparador calc {$$ = create_node(@1.first_line, aux_node, NULL, $1, $2, $3, NULL);} 
 | NOT AUX_idf_val {Node *no_NOT = create_node(@1.first_line, notlex_node, $1, NULL);
 $$ = create_node(@1.first_line, iflex_node, NULL, no_NOT, $2, NULL);};
 
-AUX_expr: AUX_idf_val {$$ = create_node(@1.first_line, idf_node, NULL, $1, NULL);} 
-| calc {$$ = create_node(@1.first_line, calc_node, NULL, $1, NULL);} ;
+/*AUX_expr: AUX_idf_val {$$ = create_node(@1.first_line, idf_node, NULL, $1, NULL);} 
+| calc {$$ = create_node(@1.first_line, calc_node, NULL, $1, NULL);} ;*/
 
 AUX_idf_val: IDF {
-	Node *no_IDF = create_node(@1.first_line, idf_node, $1, NULL);
-	$$ = create_node(@1.first_line, idf_node, NULL, no_IDF, NULL);} 
+	$$ = create_node(@1.first_line, idf_node, $1, NULL);} 
 | VALOR {
-	Node *no_VALOR = create_node(@1.first_line, lvalue_node, $1, NULL);
-	$$ = create_node(@1.first_line, lvalue_node, NULL, no_VALOR, NULL);} ;
+	$$ = create_node(@1.first_line, lvalue_node, $1, NULL);} ;
 
 comparador: GREAT {
-	Node *no_GREAT = create_node(@1.first_line, maior_node, $1, NULL);
-	$$ = create_node(@1.first_line, maior_node, NULL, no_GREAT, NULL);} 
+	$$ = create_node(@1.first_line, maior_node, $1, NULL);} 
 | LESS  {
-	Node *no_LESS = create_node(@1.first_line, menor_node, $1, NULL);
-	$$ = create_node(@1.first_line, menor_node, NULL, no_LESS, NULL);} 
+	$$ = create_node(@1.first_line, menor_node, $1,NULL);} 
 | EQ {
-	Node *no_EQ = create_node(@1.first_line, igual_node, $1, NULL);
-	$$ = create_node(@1.first_line, igual_node, NULL, no_EQ, NULL);} 
+	$$ = create_node(@1.first_line, igual_node, $1, NULL);} 
 | NE {
-	Node *no_NE = create_node(@1.first_line, diferente_node, $1, NULL);
-	$$ = create_node(@1.first_line, diferente_node, NULL, no_NE, NULL);} 
+	$$ = create_node(@1.first_line, diferente_node, $1, NULL);} 
 | GE {
-	Node *no_GE = create_node(@1.first_line, maiorigual_node, $1, NULL);
-	$$ = create_node(@1.first_line, maiorigual_node, NULL, no_GE, NULL);} 
+	$$ = create_node(@1.first_line, maiorigual_node, $1, NULL);} 
 | LE {
-	Node *no_LE = create_node(@1.first_line, menorigual_node, $1, NULL);
-	$$ = create_node(@1.first_line, menorigual_node, NULL, no_LE, NULL);} ;
+	$$ = create_node(@1.first_line, menorigual_node, $1, NULL);} ;
 
 calc: /*VALOR {$$ = create_node(@1.first_line, lvalue_node, NULL, $1, NULL);}
 | IDF {$$ = create_node(@1.first_line, idf_node, NULL, $1, NULL);}*/

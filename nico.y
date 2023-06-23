@@ -6,7 +6,7 @@
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include "node.h"
-
+	#define YYDEBUG 1
 	extern int yyerror(const char* msg ); 
 	extern int yylex();
 
@@ -27,8 +27,60 @@
 	struct _node * no;
 }
 
-%token<cadeia> IDF
-%token<cadeia> VALOR
+%token<cadeia> TEXT 
+%token<cadeia> SEMICOLON 
+%token<cadeia> INC 
+%token<cadeia> DEC 
+%token<cadeia> COMA 
+%token<cadeia> ATRIB 
+%token<cadeia> COLON 
+%token<cadeia> PERIOD 
+%token<cadeia> BRAKCLOSE 
+%token<cadeia> BRAKOPN 
+%token<cadeia> PARCLOSE 
+%token<cadeia> PAROPN 
+%token<cadeia> PLUS 
+%token<cadeia> MIN 
+%token<cadeia> BAR 
+%token<cadeia> AST 
+%token<cadeia> KOPN 
+%token<cadeia> KCLOSE 
+%token<cadeia> INT 
+%token<cadeia> DOUBLE 
+%token<cadeia> FLOAT 
+%token<cadeia> CHAR 
+%token<cadeia> QUOTE 
+%token<cadeia> DQUOTE 
+%token<cadeia> LE 
+%token<cadeia> GE 
+%token<cadeia> EQ 
+%token<cadeia> NE 
+%token<cadeia> AND 
+%token<cadeia> OR 
+%token<cadeia> NOT 
+%token<cadeia> IF 
+%token<cadeia> THEN 
+%token<cadeia> ELSE 
+%token<cadeia> WHILE 
+%token<cadeia> FOR 
+%token<cadeia> CLASS 
+%token<cadeia> PUBLIC 
+%token<cadeia> PRIVATE 
+%token<cadeia> PROTECTED 
+%token<cadeia> VOID 
+%token<cadeia> NUL 
+%token<cadeia> CONST 
+%token<cadeia> STATIC 
+%token<cadeia> LESS 
+%token<cadeia> GREAT 
+%token<cadeia> STRING 
+
+%token<cadeia> IDF 
+%token<cadeia> INT_LIT 
+%token<cadeia> F_LIT 
+
+/*%token<cadeia> IDF
+%token<cadeia> INT_LIT
 %token<cadeia> INT
 %token<cadeia> DOUBLE
 %token<cadeia> FLOAT
@@ -55,11 +107,11 @@
 %token<cadeia> EQ
 %token<cadeia> LE
 %token<cadeia> GE
-%token<cadeia> NE
+%token<cadeia> NE*/
 
 /* demais tokens ...*/
 
-%type<no> code
+//%type<no> code
 %type<no> acoes
 %type<no> declaracoes
 %type<no> declaracao
@@ -81,16 +133,16 @@
 
 /* demais types ... */
 
-%start code
+%start comando
 
  /* A completar com seus tokens - compilar com 'yacc -d' */
 
 %%
-code: comando{ $$ = create_node(@1.first_line, 0, "Root", $1, NULL); syntax_tree = $$; };
+//code: comando{ $$ = create_node(@1.first_line, 0, "Root", $1, NULL); syntax_tree = $$; };
 
-comando: { $$ = create_node(1, 0, "Vazio", NULL); } 
-| declaracoes code {  $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL);}
-| acoes code{ $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL); };
+comando: 
+ declaracoes acoes {  $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL);syntax_tree = $$; }
+| acoes { $$ = $1; syntax_tree = $$; };
 
 declaracoes: declaracao SEMICOLON{ 
 	Node *no_SEMICOLON = create_node(@1.first_line, pontoevirgula_node,  $2, NULL);
@@ -108,14 +160,16 @@ tipo: INT {
 | CHAR {
 	$$ = create_node(@1.first_line, char_node, $1, NULL);} ;
 
+
 acoes: for {$$ = create_node(@1.first_line, for_node, NULL, $1, NULL);} 
 | while {$$ = create_node(@1.first_line, while_node, NULL, $1, NULL);}
 | if {$$ = create_node(@1.first_line, if_node, NULL, $1, NULL);}
 | ifelse {$$ = create_node(@1.first_line, else_node, NULL, $1, NULL);}
-| att {$$ = create_node(@1.first_line, atribuicao_node, NULL, $1, NULL);} ;
+| att {$$ = $1;} ;
+//| att {$$ = create_node(@1.first_line, atribuicao_node, NULL, $1, NULL);} ;
 
 
-for: FOR PAROPN att SEMICOLON expressao SEMICOLON att PARCLOSE KOPN code KCLOSE {
+for: FOR PAROPN att SEMICOLON expressao SEMICOLON att PARCLOSE KOPN comando KCLOSE {
 	Node *no_FOR = create_node(@1.first_line, forlex_node, $1, NULL);
 	Node *no_PAROPN = create_node(@1.first_line, abrepar_node,  $2, NULL);
 	Node *no_SEMICOLON = create_node(@1.first_line, pontoevirgula_node,  $4, NULL);
@@ -123,7 +177,7 @@ for: FOR PAROPN att SEMICOLON expressao SEMICOLON att PARCLOSE KOPN code KCLOSE 
 	Node *no_KOPN = create_node(@1.first_line, abrechaves_node,  $9, NULL);
 	Node *no_KCLOSE = create_node(@1.first_line, fechachaves_node, $11, NULL);
 	$$ = create_node(@1.first_line, forlex_node, NULL, no_FOR, no_PAROPN, $3, no_SEMICOLON,$5, no_SEMICOLON, $7, no_PARCLOSE, no_KOPN, $10, no_KCLOSE, NULL);} 
-| FOR PAROPN declaracao SEMICOLON expressao SEMICOLON att PARCLOSE KOPN code KCLOSE {
+| FOR PAROPN declaracao SEMICOLON expressao SEMICOLON att PARCLOSE KOPN comando KCLOSE {
 	Node *no_FOR = create_node(@1.first_line, forlex_node, $1, NULL);
 	Node *no_PAROPN = create_node(@1.first_line, abrepar_node,  $2, NULL);
 	Node *no_SEMICOLON = create_node(@1.first_line, pontoevirgula_node,  $4, NULL);
@@ -132,7 +186,7 @@ for: FOR PAROPN att SEMICOLON expressao SEMICOLON att PARCLOSE KOPN code KCLOSE 
 	Node *no_KCLOSE = create_node(@1.first_line, fechachaves_node, $11, NULL);
 	$$ = create_node(@1.first_line, forlex_node, NULL, no_FOR, no_PAROPN, $3, no_SEMICOLON,$5, no_SEMICOLON, $7, no_PARCLOSE, no_KOPN, $10, no_KCLOSE, NULL);};
 
-while: WHILE PAROPN expressao PARCLOSE KOPN code KCLOSE {
+while: WHILE PAROPN expressao PARCLOSE KOPN comando KCLOSE {
 	Node *no_WHILE = create_node(@1.first_line, whilelex_node, $1, NULL);
 	Node *no_PAROPN = create_node(@1.first_line, abrepar_node,  $2, NULL);
 	Node *no_PARCLOSE = create_node(@1.first_line, fechapar_node,  $4, NULL);
@@ -140,7 +194,7 @@ while: WHILE PAROPN expressao PARCLOSE KOPN code KCLOSE {
 	Node *no_KCLOSE = create_node(@1.first_line, fechachaves_node, $7, NULL);
 	$$ = create_node(@1.first_line, whilelex_node, NULL, no_WHILE, no_PAROPN, $3, no_PARCLOSE, no_KOPN,$6, no_KCLOSE, NULL);};
 
-if: IF PAROPN expressao PARCLOSE KOPN code KCLOSE {
+if: IF PAROPN expressao PARCLOSE KOPN comando KCLOSE {
 	Node *no_IF = create_node(@1.first_line, iflex_node, $1, NULL);
 	Node *no_PAROPN = create_node(@1.first_line, abrepar_node,  $2, NULL);
 	Node *no_PARCLOSE = create_node(@1.first_line, fechapar_node,  $4, NULL);
@@ -148,7 +202,7 @@ if: IF PAROPN expressao PARCLOSE KOPN code KCLOSE {
 	Node *no_KCLOSE = create_node(@1.first_line, fechachaves_node, $7, NULL);
 	$$ = create_node(@1.first_line, iflex_node, NULL, no_IF, no_PAROPN, $3, no_PARCLOSE,no_KOPN,$6,no_KCLOSE, NULL);}; 
 
-ifelse: if ELSE KOPN code KCLOSE {
+ifelse: if ELSE KOPN comando KCLOSE {
 	Node *no_ELSE = create_node(@1.first_line, elselex_node, $2, NULL);
 	Node *no_KOPN = create_node(@1.first_line, abrechaves_node,  $3, NULL);
 	Node *no_KCLOSE = create_node(@1.first_line, fechachaves_node, $5, NULL);
@@ -159,6 +213,7 @@ ifelse: if ELSE KOPN code KCLOSE {
 att: IDF ATRIB calc {
 	Node *no_IDF = create_node(@1.first_line, idf_node, $1, NULL);
 	Node *no_ATRIB = create_node(@1.first_line, atribuicao_node,  $2, NULL);
+
 	$$ = create_node(@1.first_line, atribuicaolex_node, NULL, no_IDF, no_ATRIB, $3, NULL);};
 
 expressao: expr {$$ = create_node(@1.first_line, expr_node, NULL, $1, NULL);} 
@@ -178,8 +233,9 @@ $$ = create_node(@1.first_line, iflex_node, NULL, no_NOT, $2, NULL);};
 
 AUX_idf_val: IDF {
 	$$ = create_node(@1.first_line, idf_node, $1, NULL);} 
-| VALOR {
+| INT_LIT {
 	$$ = create_node(@1.first_line, lvalue_node, $1, NULL);} ;
+
 
 comparador: GREAT {
 	$$ = create_node(@1.first_line, maior_node, $1, NULL);} 

@@ -38,7 +38,7 @@
 # define YY_YY_Y_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 0
+# define YYDEBUG 1
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -56,28 +56,49 @@ extern int yydebug;
     AND = 262,
     OR = 263,
     NOT = 264,
-    IDF = 265,
-    VALOR = 266,
-    INT = 267,
-    DOUBLE = 268,
-    FLOAT = 269,
-    CHAR = 270,
-    IF = 271,
-    ELSE = 272,
-    FOR = 273,
-    WHILE = 274,
-    ATRIB = 275,
+    TEXT = 265,
+    SEMICOLON = 266,
+    INC = 267,
+    DEC = 268,
+    COMA = 269,
+    ATRIB = 270,
+    COLON = 271,
+    PERIOD = 272,
+    BRAKCLOSE = 273,
+    BRAKOPN = 274,
+    PARCLOSE = 275,
     PAROPN = 276,
-    PARCLOSE = 277,
-    KOPN = 278,
-    KCLOSE = 279,
-    SEMICOLON = 280,
-    GREAT = 281,
-    LESS = 282,
-    EQ = 283,
-    LE = 284,
-    GE = 285,
-    NE = 286
+    KOPN = 277,
+    KCLOSE = 278,
+    INT = 279,
+    DOUBLE = 280,
+    FLOAT = 281,
+    CHAR = 282,
+    QUOTE = 283,
+    DQUOTE = 284,
+    LE = 285,
+    GE = 286,
+    EQ = 287,
+    NE = 288,
+    IF = 289,
+    THEN = 290,
+    ELSE = 291,
+    WHILE = 292,
+    FOR = 293,
+    CLASS = 294,
+    PUBLIC = 295,
+    PRIVATE = 296,
+    PROTECTED = 297,
+    VOID = 298,
+    NUL = 299,
+    CONST = 300,
+    STATIC = 301,
+    LESS = 302,
+    GREAT = 303,
+    STRING = 304,
+    IDF = 305,
+    INT_LIT = 306,
+    F_LIT = 307
   };
 #endif
 /* Tokens.  */
@@ -88,28 +109,49 @@ extern int yydebug;
 #define AND 262
 #define OR 263
 #define NOT 264
-#define IDF 265
-#define VALOR 266
-#define INT 267
-#define DOUBLE 268
-#define FLOAT 269
-#define CHAR 270
-#define IF 271
-#define ELSE 272
-#define FOR 273
-#define WHILE 274
-#define ATRIB 275
+#define TEXT 265
+#define SEMICOLON 266
+#define INC 267
+#define DEC 268
+#define COMA 269
+#define ATRIB 270
+#define COLON 271
+#define PERIOD 272
+#define BRAKCLOSE 273
+#define BRAKOPN 274
+#define PARCLOSE 275
 #define PAROPN 276
-#define PARCLOSE 277
-#define KOPN 278
-#define KCLOSE 279
-#define SEMICOLON 280
-#define GREAT 281
-#define LESS 282
-#define EQ 283
-#define LE 284
-#define GE 285
-#define NE 286
+#define KOPN 277
+#define KCLOSE 278
+#define INT 279
+#define DOUBLE 280
+#define FLOAT 281
+#define CHAR 282
+#define QUOTE 283
+#define DQUOTE 284
+#define LE 285
+#define GE 286
+#define EQ 287
+#define NE 288
+#define IF 289
+#define THEN 290
+#define ELSE 291
+#define WHILE 292
+#define FOR 293
+#define CLASS 294
+#define PUBLIC 295
+#define PRIVATE 296
+#define PROTECTED 297
+#define VOID 298
+#define NUL 299
+#define CONST 300
+#define STATIC 301
+#define LESS 302
+#define GREAT 303
+#define STRING 304
+#define IDF 305
+#define INT_LIT 306
+#define F_LIT 307
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -120,7 +162,7 @@ union YYSTYPE
 	char* cadeia;
 	struct _node * no;
 
-#line 124 "y.tab.h"
+#line 166 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

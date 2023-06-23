@@ -99,13 +99,13 @@ typedef int Node_type;
 
 /** Estrutura de dados parcial para o no da arvore. */
 typedef struct _node {
-   int line_num;   /**< numero de linha. */
-   char* lexeme;   /**< o lexema retornado pelo analizador lexical. */
-   Node_type type; /**< Um dos valores definidos acima pelos # defines. */
-   void* attribute;/**< Qualquer coisa por enquanto. */
-
-   struct _node** children;
-   unsigned int n_child;
+    int line_num;   /**< numero de linha. */
+    char* lexeme;   /**< o lexema retornado pelo analizador lexical. */
+    Node_type type; /**< Um dos valores definidos acima pelos # defines. */
+    void* attribute;/**< Qualquer coisa por enquanto. */
+    struct _node** children;
+    //struct _node* dad;
+    unsigned int n_child;
 
 } Node;
 

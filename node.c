@@ -1,4 +1,4 @@
-#include <stdio.h>
+	#include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <stdarg.h>
@@ -38,6 +38,7 @@ Node* create_node(int nl, Node_type t, char* lexeme,  /* Node* children */ ...)
     va_end(ap);
 	new_node->type=t;
 	new_node->line_num=nl;
+    new_node->lexeme=lexeme;
 	//printf("cheguei no fim da cracao");
 	return new_node;
 }
@@ -100,23 +101,22 @@ int height(Node* n)
 
 void uncompile(FILE* outfile, Node *n)
 {
-	/*if(n != NULL)
+    printf("Entrando\n");
+	if(n != NULL)
 	{
-		//Code ...
-		for(int i = 0; i < n->n_child; i++){
-			for (int i = 0; i < level; i++)
-				fprintf(outfile, "\t");
+    printf("Cheguei\n");
+        if(!is_leaf(n)) { 
+			for(int i = 0; i < n->n_child; i++){
+			//for (int i = 0; i < level; i++)
+                uncompile(outfile,n->children[i]);
+                printf("No folhq!\n");
+            }
+        } else{
+  		//Code ...
+		    printf("Folha\n");
+            fprintf(outfile ,"Node: %s\n", n->lexeme);
+	    }
 
-			fprintf(outfile ,"Node: %s\n", n->lexeme);
+    }
 
-			if (!is_leaf(n->children[i]))
-			{
-				for (int i = 0; i < level; i++)
-					fprintf(outfile, "\t");
-
-				fprintf(outfile, "Children:\n");
-				uncompile(outfile, n->children[i], level + 1);
-			}
-    	}
-	}*/
 }

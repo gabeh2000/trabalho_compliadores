@@ -8,8 +8,8 @@
     #include <string.h>
    
     /* este include eh importante... */
-    #include "tokens.h"
-    //#include "y.tab.h"
+    //#include "tokens.h"
+    #include "y.tab.h"
   
 %}
 
@@ -87,7 +87,7 @@ static    { return(STATIC);}
 {num}     { printf("NUM\n");return(F_LIT);}
 {var}    { printf("VAR\n");return(IDF);}
 {text}    { return(TEXT);}
-[ \n\t]+ { printf("BRANCO\n"); }
+[ \n\t\r]+ { printf("BRANCO\n"); }
 
   /* Tratamento dos erros lexicais: a regra seguinte pega tudo o que nao
    * fechou com uma Regexp anterior.

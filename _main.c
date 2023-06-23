@@ -9,6 +9,7 @@ char* progname;
 int lineno;
 
 extern FILE* yyin;
+int yydebug = 1;
 extern int yyparse();
 extern Node * syntax_tree;
 
@@ -26,11 +27,13 @@ int main(int argc, char* argv[])
 	}
 
 	progname = argv[0];
+    FILE *saida=fopen(argv[2],"w");
 
 	int result = yyparse();
 
 	if(argc == 3) //testing
-		uncompile(stdout, syntax_tree);
+    //printf("Oi\n");	
+	uncompile(saida, syntax_tree);
 	else
 	{
 		if(!result)

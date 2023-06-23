@@ -10,7 +10,7 @@ lex.yy.c: scanner.l tokens.h
 	flex scanner.l
 
 nico.tab.c: nico.y node.h
-	yacc -d nico.y
+	yacc -d -t nico.y
 
 clean:
 	rm -f *.o lex.yy.?

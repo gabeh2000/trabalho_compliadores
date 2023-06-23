@@ -403,7 +403,7 @@ static const flex_int16_t yy_accept[129] =
 static const YY_CHAR yy_ec[256] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    2,    3,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    2,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    2,    4,    5,    1,    1,    1,    1,    6,    7,
         8,    9,   10,   11,   12,   13,   14,   15,   15,   15,
@@ -577,8 +577,8 @@ char *yytext;
     #include <string.h>
    
     /* este include eh importante... */
-    #include "tokens.h"
-    //#include "y.tab.h"
+    //#include "tokens.h"
+    #include "y.tab.h"
   
 #line 584 "lex.yy.c"
 /*%{

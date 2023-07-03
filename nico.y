@@ -5,12 +5,47 @@
    */
 	#include <stdio.h>
 	#include <stdlib.h>
+	#include <string.h>
 	#include "node.h"
+	#include "symbol_table.h"
+	#include "lista.h"
 	#define YYDEBUG 1
+
+	#define CHAR_TYPE 0
+	#define INT_TYPE 1
+	#define FLOAT_TYPE 2
+
+	#define CHAR_SIZE 1
+	#define INT_SIZE 4
+	#define FLOAT_SIZE 8
+
+
+
 	extern int yyerror(const char* msg ); 
 	extern int yylex();
 
 	extern Node * syntax_tree;
+	extern symbol_t* symbol_table;
+
+	int v_size = 0;
+	int v_desloc = 0;
+	int reg = 0;
+	
+	entry_t *new_entry(char *lx){
+        entry_t *new_entry = (entry_t *)malloc(sizeof(entry_t));
+        new_entry->name = lx;
+        new_entry->desloc = v_desloc;
+        new_entry->size = v_size;
+        v_desloc += new_entry->size;
+        return new_entry;
+    }
+
+    void atrib(char *lx){
+        if (insert(symbol_table, new_entry(lx)) != 0){
+            printf("ERROR:%s\n", lx);
+            exit(0);
+        }
+    }
 
 %}
 
@@ -79,36 +114,6 @@
 %token<cadeia> INT_LIT 
 %token<cadeia> F_LIT 
 
-/*%token<cadeia> IDF
-%token<cadeia> INT_LIT
-%token<cadeia> INT
-%token<cadeia> DOUBLE
-%token<cadeia> FLOAT
-%token<cadeia> CHAR
-%token<cadeia> OR
-%token<cadeia> AND
-%token<cadeia> IF
-%token<cadeia> ELSE
-%token<cadeia> FOR
-%token<cadeia> WHILE
-%token<cadeia> ATRIB
-%token<cadeia> PAROPN
-%token<cadeia> PARCLOSE
-%token<cadeia> KOPN
-%token<cadeia> KCLOSE
-%token<cadeia> SEMICOLON
-%token<cadeia> NOT
-%token<cadeia> PLUS
-%token<cadeia> MIN
-%token<cadeia> AST
-%token<cadeia> BAR
-%token<cadeia> GREAT
-%token<cadeia> LESS
-%token<cadeia> EQ
-%token<cadeia> LE
-%token<cadeia> GE
-%token<cadeia> NE*/
-
 /* demais tokens ...*/
 
 //%type<no> code
@@ -150,15 +155,15 @@ declaracoes: declaracao SEMICOLON{
 	$$ = create_node(@1.first_line, declaracoes_node, NULL, $1, no_SEMICOLON, NULL);} ;
 
 declaracao: tipo IDF { Node *no_IDF = create_node(@1.first_line, declaracao_node, $2, NULL);
-$$ = create_node(@1.first_line, declaracao_node, NULL, $1, no_IDF, NULL);} 
-| tipo att {$$ = create_node(@1.first_line, declaracao_node, NULL, $1, $2, NULL);} ;
+$$ = create_node(@1.first_line, declaracao_node, NULL, $1, no_IDF, NULL); atrib(no_IDF);} 
+| tipo att {$$ = create_node(@1.first_line, declaracao_node, NULL, $1, $2, NULL); atrib($2->children[0]);} ;
 
 tipo: INT {
-	$$ = create_node(@1.first_line, int_node, $1, NULL);} 
+	$$ = create_node(@1.first_line, int_node, $1, NULL); v_size=INT_SIZE; } 
 | FLOAT {
-	$$ = create_node(@1.first_line, float_node, $1, NULL);} 
+	$$ = create_node(@1.first_line, float_node, $1, NULL);v_size=FLOAT_SIZE;} 
 | CHAR {
-	$$ = create_node(@1.first_line, char_node, $1, NULL);} ;
+	$$ = create_node(@1.first_line, char_node, $1, NULL);v_size=CHAR_SIZE;} ;
 
 
 acoes: for {$$ = create_node(@1.first_line, for_node, NULL, $1, NULL);} 
@@ -213,7 +218,7 @@ ifelse: if ELSE KOPN comando KCLOSE {
 att: IDF ATRIB calc {
 	Node *no_IDF = create_node(@1.first_line, idf_node, $1, NULL);
 	Node *no_ATRIB = create_node(@1.first_line, atribuicao_node,  $2, NULL);
-
+	
 	$$ = create_node(@1.first_line, atribuicaolex_node, NULL, no_IDF, no_ATRIB, $3, NULL);};
 
 expressao: expr {$$ = create_node(@1.first_line, expr_node, NULL, $1, NULL);} 
@@ -234,7 +239,9 @@ $$ = create_node(@1.first_line, iflex_node, NULL, no_NOT, $2, NULL);};
 AUX_idf_val: IDF {
 	$$ = create_node(@1.first_line, idf_node, $1, NULL);} 
 | INT_LIT {
-	$$ = create_node(@1.first_line, lvalue_node, $1, NULL);} ;
+	$$ = create_node(@1.first_line, lvalue_node, $1, NULL);} 
+| F_LIT {
+	$$ = create_node(@1.first_line, lvalue_node, $1, NULL);};
 
 
 comparador: GREAT {

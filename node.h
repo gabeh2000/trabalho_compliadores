@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-
+#include "lista.h"
 
 typedef int Node_type;
 
@@ -103,6 +103,8 @@ typedef struct _node {
     char* lexeme;   /**< o lexema retornado pelo analizador lexical. */
     Node_type type; /**< Um dos valores definidos acima pelos # defines. */
     void* attribute;/**< Qualquer coisa por enquanto. */
+    void* local;
+    Node_tac* code;
     struct _node** children;
     //struct _node* dad;
     unsigned int n_child;

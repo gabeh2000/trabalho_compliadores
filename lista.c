@@ -8,16 +8,66 @@
 Tac* create_inst_tac(const char* res, const char* arg1,const char* op, const char* arg2){
     Tac* taque =(Tac*)malloc(sizeof(Tac));
     
-    taque->res=res;
-    taque->arg1=arg1;
-    taque->arg2=arg2;
-    taque->op=op;
+    taque->res = malloc(sizeof(res));
+    taque->arg1 = malloc(sizeof(arg1));
+    taque->op = malloc(sizeof(op));
+    taque->arg2 = malloc(sizeof(arg2));
+
+    if (res != NULL)
+        strcpy(taque->res, res);
+    if (arg1 != NULL)
+        strcpy(taque->arg1, arg1);
+    if (arg2 != NULL)
+        strcpy(taque->arg2, arg2);
+    if (op != NULL)
+        strcpy(taque->op, op);
 
     return taque;
 }
 
 void print_inst_tac(FILE* out, Tac i){
-    fprintf(out, "%s := %s %s %s \n",i.res, i.arg1, i.op, i.arg2);
+    char opr[5];
+    if(strchr(i.arg1,'.')!=NULL){
+        if(strcmp(i.op,"+")==0){
+            char* aux = "FADD";
+            strcpy(opr,aux);
+        }
+        if(strcmp(i.op,"*")==0){
+            char* aux = "FMUL";
+            strcpy(opr,aux);
+        }
+        if(strcmp(i.op,"/")==0){
+            char* aux = "FDIV";
+            strcpy(opr,aux);
+        }
+        if(strcmp(i.op,"-")==0){
+            char* aux = "FSUB";
+            strcpy(opr,aux);
+        }
+        if(strcmp(i.op,"Print")==0){}
+    }
+    else{
+        if(strcmp(i.op,"+")==0){
+            char* aux = "ADD";
+            strcpy(opr,aux);
+        }
+        if(strcmp(i.op,"*")==0){
+            char* aux = "MUL";
+            strcpy(opr,aux);
+        }
+        if(strcmp(i.op,"/")==0){
+            char* aux = "DIV";
+            strcpy(opr,aux);
+        }
+        if(strcmp(i.op,"-")==0){
+            char* aux = "SUB";
+            strcpy(opr,aux);
+        }
+        if(strcmp(i.op,"Print")==0){}
+    }
+    
+
+    fprintf(out, "%s := %s %s %s \n",i.res, i.arg1, opr, i.arg2);
 }
 
 void print_tac(FILE* out, Node_tac * code){
@@ -54,8 +104,13 @@ void append_inst_tac(Node_tac ** code, Tac * inst){
     }
     novo->next = NULL;
     novo->prev = (*aux);
+    if(code==NULL){
+        (*code)=novo;
+    }
+    else{
+        (*aux)->next = novo;
+    }
     
-    (*aux)->next = novo;
 }
 void cat_tac(Node_tac ** code_a, Node_tac ** code_b){
     Node_tac ** aux = code_a;

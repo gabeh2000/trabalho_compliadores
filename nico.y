@@ -28,6 +28,8 @@
 	extern symbol_t* symbol_table;
 
 	int v_size = 0;
+	int code_size = 0;
+	int max_t_size = 0;
 	int v_desloc = 0;
 	int reg = 0;
 	
@@ -46,6 +48,25 @@
             exit(0);
         }
     }
+
+		char *rx(int desloc){
+		char *t = malloc(sizeof(char)*2);
+		sprintf(t, "%03d(RX)", desloc);
+		return t;
+	}
+
+	char *sp(char *id){
+		entry_t* aux = lookup(*symbol_table, id);
+		if(aux != NULL){       
+			char *t = malloc(sizeof(char)*2);
+			sprintf(t, "%03d(SP)", aux->desloc);
+			return t;
+		}
+		else{			
+			printf("UNDEFINED: %s \n", id);
+			exit(0);
+		}
+	}
 
 %}
 
@@ -146,8 +167,8 @@
 //code: comando{ $$ = create_node(@1.first_line, 0, "Root", $1, NULL); syntax_tree = $$; };
 
 comando: 
- declaracoes acoes {  $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL);syntax_tree = $$; }
-| acoes { $$ = $1; syntax_tree = $$; };
+ declaracoes acoes {  $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL); init_table(symbol_table); syntax_tree = $$; }
+| acoes { $$ = $1; init_table(symbol_table); syntax_tree = $$; };
 
 declaracoes: declaracao SEMICOLON{ 
 	Node *no_SEMICOLON = create_node(@1.first_line, pontoevirgula_node,  $2, NULL);
@@ -155,8 +176,8 @@ declaracoes: declaracao SEMICOLON{
 	$$ = create_node(@1.first_line, declaracoes_node, NULL, $1, no_SEMICOLON, NULL);} ;
 
 declaracao: tipo IDF { Node *no_IDF = create_node(@1.first_line, declaracao_node, $2, NULL);
-$$ = create_node(@1.first_line, declaracao_node, NULL, $1, no_IDF, NULL); atrib(no_IDF);} 
-| tipo att {$$ = create_node(@1.first_line, declaracao_node, NULL, $1, $2, NULL); atrib($2->children[0]);} ;
+$$ = create_node(@1.first_line, declaracao_node, NULL, $1, no_IDF, NULL); atrib(no_IDF->lexeme);} 
+| tipo att {$$ = create_node(@1.first_line, declaracao_node, NULL, $1, $2, NULL); atrib($2->children[0]->lexeme);} ;
 
 tipo: INT {
 	$$ = create_node(@1.first_line, int_node, $1, NULL); v_size=INT_SIZE; } 
@@ -215,11 +236,16 @@ ifelse: if ELSE KOPN comando KCLOSE {
 
 /*att: IDF ATRIB VALOR {$$ = create_node(@1.first_line, atribuicaolex_node, NULL, $1, $2, $3, NULL);}
 | IDF ATRIB calc {$$ = create_node(@1.first_line, atribuicaolex_node, NULL, $1, $2, $3, NULL);} ;*/
+//O tac pra parte 3 tem que ser aqui↓
 att: IDF ATRIB calc {
 	Node *no_IDF = create_node(@1.first_line, idf_node, $1, NULL);
 	Node *no_ATRIB = create_node(@1.first_line, atribuicao_node,  $2, NULL);
 	
-	$$ = create_node(@1.first_line, atribuicaolex_node, NULL, no_IDF, no_ATRIB, $3, NULL);};
+	$$ = create_node(@1.first_line, atribuicaolex_node, NULL, no_IDF, no_ATRIB, $3, NULL);
+	
+	
+	
+	};
 
 expressao: expr {$$ = create_node(@1.first_line, expr_node, NULL, $1, NULL);} 
 | expr and_or expressao {$$ = create_node(@1.first_line, expr_node, NULL, $1, $2, $3, NULL);};

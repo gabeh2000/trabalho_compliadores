@@ -4,7 +4,7 @@ LDFLAGS = -g
 all: main 
 
 main: lex.yy.c nico.tab.c
-	$(CC) $(LDFLAGS) -o meu_compilador _main.c lex.yy.c y.tab.c node.c -lfl
+	$(CC) $(LDFLAGS) -o meu_compilador _main.c lex.yy.c y.tab.c node.c lista.c symbol_table.c -lfl
 
 lex.yy.c: scanner.l tokens.h
 	flex scanner.l

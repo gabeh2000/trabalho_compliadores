@@ -3,7 +3,8 @@
 #include <assert.h>
 
 #include "node.h"
-
+#include "symbol_table.h"
+#include "lista.h"
 /* Programa principal. */
 char* progname;
 int lineno;
@@ -30,7 +31,9 @@ int main(int argc, char* argv[])
     FILE *saida=fopen(argv[2],"w");
 
 	int result = yyparse();
-
+	/*FILE* file = fopen("lista.txt", "w");
+    print_tac(file, syntax_tree->code);*/
+	print_table(*symbol_table);
 	if(argc == 3) //testing
     //printf("Oi\n");	
 	uncompile(saida, syntax_tree);

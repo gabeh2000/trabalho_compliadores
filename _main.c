@@ -10,9 +10,10 @@ char* progname;
 int lineno;
 
 extern FILE* yyin;
-int yydebug = 1;
+//int yydebug = 1;
 extern int yyparse();
 extern Node * syntax_tree;
+extern symbol_t symbol_table;
 
 int main(int argc, char* argv[])
 {
@@ -29,11 +30,17 @@ int main(int argc, char* argv[])
 
 	progname = argv[0];
     FILE *saida=fopen(argv[2],"w");
+	if(init_table(&symbol_table)){
 
+		printf("erro de alocacao\n");
+
+		exit(0);
+
+	}
 	int result = yyparse();
 	/*FILE* file = fopen("lista.txt", "w");
     print_tac(file, syntax_tree->code);*/
-	print_table(*symbol_table);
+	print_table(symbol_table);
 	if(argc == 3) //testing
     //printf("Oi\n");	
 	uncompile(saida, syntax_tree);

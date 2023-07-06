@@ -25,8 +25,8 @@
 	extern int yylex();
 
 	extern Node * syntax_tree;
-	extern symbol_t* symbol_table;
-
+	extern symbol_t symbol_table;
+	
 	int v_size = 0;
 	int code_size = 0;
 	int max_t_size = 0;
@@ -43,7 +43,7 @@
     }
 
     void atrib(char *lx){
-        if (insert(symbol_table, new_entry(lx)) != 0){
+        if (insert(&symbol_table, new_entry(lx)) != 0){
             printf("ERROR:%s\n", lx);
             exit(0);
         }
@@ -56,7 +56,7 @@
 	}
 
 	char *sp(char *id){
-		entry_t* aux = lookup(*symbol_table, id);
+		entry_t* aux = lookup(symbol_table, id);
 		if(aux != NULL){       
 			char *t = malloc(sizeof(char)*2);
 			sprintf(t, "%03d(SP)", aux->desloc);
@@ -167,17 +167,18 @@
 //code: comando{ $$ = create_node(@1.first_line, 0, "Root", $1, NULL); syntax_tree = $$; };
 
 comando: 
- declaracoes acoes {  $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL); init_table(symbol_table); syntax_tree = $$; }
-| acoes { $$ = $1; init_table(symbol_table); syntax_tree = $$; };
+ declaracoes acoes { printf("1st"); $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL); printf("primeira parada");  syntax_tree = $$; }
+| acoes { $$ = $1; syntax_tree = $$; };
 
 declaracoes: declaracao SEMICOLON{ 
+	printf("2nd");
 	Node *no_SEMICOLON = create_node(@1.first_line, pontoevirgula_node,  $2, NULL);
 
 	$$ = create_node(@1.first_line, declaracoes_node, NULL, $1, no_SEMICOLON, NULL);} ;
 
-declaracao: tipo IDF { Node *no_IDF = create_node(@1.first_line, declaracao_node, $2, NULL);
-$$ = create_node(@1.first_line, declaracao_node, NULL, $1, no_IDF, NULL); atrib(no_IDF->lexeme);} 
-| tipo att {$$ = create_node(@1.first_line, declaracao_node, NULL, $1, $2, NULL); atrib($2->children[0]->lexeme);} ;
+declaracao: tipo IDF { printf("3th");Node *no_IDF = create_node(@1.first_line, declaracao_node, $2, NULL);
+$$ = create_node(@1.first_line, declaracao_node, NULL, $1, no_IDF, NULL);printf("segunda parada"); atrib($2);} 
+| tipo att {$$ = create_node(@1.first_line, declaracao_node, NULL, $1, $2, NULL); printf("segunda2 parada");atrib($2->children[0]);} ;
 
 tipo: INT {
 	$$ = create_node(@1.first_line, int_node, $1, NULL); v_size=INT_SIZE; } 

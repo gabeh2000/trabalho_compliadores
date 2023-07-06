@@ -49,7 +49,7 @@ typedef struct {
     struct table_node_entry * entries[PRIME];
 } symbol_t ;
 
-extern symbol_t* symbol_table;
+extern symbol_t symbol_table;
 
 
 /** \brief Inicializar a tabela de Hash.

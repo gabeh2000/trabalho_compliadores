@@ -52,6 +52,8 @@ int main(int argc, char* argv[])
 			printf("ERROR.\n");
 	}
 
+	free_table(&symbol_table);
+
 	return 0;
 }
 

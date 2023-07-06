@@ -28,7 +28,7 @@
 	extern symbol_t symbol_table;
 	
 	int v_size = 0;
-	int code_size = 0;
+	int temp_size = 0;
 	int max_t_size = 0;
 	int v_desloc = 0;
 	int reg = 0;
@@ -49,7 +49,7 @@
         }
     }
 
-		char *rx(int desloc){
+	char *rx(int desloc){
 		char *t = malloc(sizeof(char)*2);
 		sprintf(t, "%03d(RX)", desloc);
 		return t;
@@ -178,7 +178,7 @@ declaracoes: declaracao SEMICOLON{
 
 declaracao: tipo IDF { printf("3th");Node *no_IDF = create_node(@1.first_line, declaracao_node, $2, NULL);
 $$ = create_node(@1.first_line, declaracao_node, NULL, $1, no_IDF, NULL);printf("segunda parada"); atrib($2);} 
-| tipo att {$$ = create_node(@1.first_line, declaracao_node, NULL, $1, $2, NULL); printf("segunda2 parada");atrib($2->children[0]);} ;
+| tipo att {$$ = create_node(@1.first_line, declaracao_node, NULL, $1, $2, NULL); printf("segunda2 parada");} ;
 
 tipo: INT {
 	$$ = create_node(@1.first_line, int_node, $1, NULL); v_size=INT_SIZE; } 
@@ -243,8 +243,24 @@ att: IDF ATRIB calc {
 	Node *no_ATRIB = create_node(@1.first_line, atribuicao_node,  $2, NULL);
 	
 	$$ = create_node(@1.first_line, atribuicaolex_node, NULL, no_IDF, no_ATRIB, $3, NULL);
+	atrib($1);
 	
+	/*
+	Anotação pra raciocinar como utilizar o lista.h aqui pra fazer um código TAC decente
 	
+	a gente quer gerar algo como: 000:000(Rx) := 000(SP) := 0
+	isso seria o equivalente a: int i = 0;
+	vou precisar pegar a posição da variável na symbol table
+	pra criar uma instrução tac temos a função: Tac* create_inst_tac(const char* res, const char* arg1,const char* op, const char* arg2)
+	então, pra gerar o tac de int i = 0 eu teria que passar create_inst_tac(i,0,NULL,NULL)
+	pra algo como i = 2 + 3 seria create_inst_tac(i,2,+,3)
+	mas o certo seria algo como create_inst_tac("000(SP)","2","+","3")
+	ok, com isso a gente tem uma noção do que tem que fazer, quando for um terminal a gente tem que transformar ele em um SP caso seja um IDF
+	caso a operação seja com mais de dois argumentos precisaremos de guardar alguns resultados em um RX, aka temporário
+
+
+	
+	*/
 	
 	};
 

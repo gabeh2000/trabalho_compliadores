@@ -11,6 +11,8 @@
     //#include "tokens.h"
     #include "y.tab.h"
     #include "symbol_table.h"
+    #include "lista.h"
+
 
     extern symbol_t symbol_table;
 %}

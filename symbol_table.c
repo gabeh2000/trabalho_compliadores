@@ -117,6 +117,7 @@ entry_t* lookup(symbol_t table, char* name) {
  */
 int insert(symbol_t* table, entry_t* entry) {
     if(lookup(*table, entry->name) != NULL) { // se a chave j� existe, retorna um numero negativo.
+        printf("Simbolo existente\n");
         return -1;
     }
 

@@ -1116,28 +1116,31 @@ YY_RULE_SETUP
 case 47:
 YY_RULE_SETUP
 #line 91 "scanner.l"
-{ printf("INTEIRO\n");return(INT_LIT);}
+{ yylval.cadeia = strdup(yytext);
+                    printf("INTEIRO\n");return(INT_LIT);}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 92 "scanner.l"
-{ printf("NUM\n");return(F_LIT);}
+#line 93 "scanner.l"
+{yylval.cadeia = strdup(yytext);
+                    printf("NUM\n");return(F_LIT);}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 93 "scanner.l"
-{ printf("VAR\n");return(IDF);}
+#line 95 "scanner.l"
+{yylval.cadeia = strdup(yytext);
+                    printf("VAR\n");return(IDF);}
 	YY_BREAK
 case 50:
 /* rule 50 can match eol */
 YY_RULE_SETUP
-#line 94 "scanner.l"
-{ return(TEXT);}
+#line 97 "scanner.l"
+{return(TEXT);}
 	YY_BREAK
 case 51:
 /* rule 51 can match eol */
 YY_RULE_SETUP
-#line 95 "scanner.l"
+#line 98 "scanner.l"
 { printf("BRANCO\n"); }
 	YY_BREAK
 /* Tratamento dos erros lexicais: a regra seguinte pega tudo o que nao
@@ -1145,16 +1148,16 @@ YY_RULE_SETUP
    */
 case 52:
 YY_RULE_SETUP
-#line 100 "scanner.l"
+#line 103 "scanner.l"
 { printf("Erro léxico: caractere desconhecido '%c' (%d).\n",
         yytext[0], yytext[0]); }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 102 "scanner.l"
+#line 105 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1158 "lex.yy.c"
+#line 1161 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2171,7 +2174,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 102 "scanner.l"
+#line 105 "scanner.l"
 
  /* Secao dos  Procedimentos auxiliares  */
 

@@ -43,8 +43,13 @@
     }
 
     void atrib(char *lx){
+		print_table(symbol_table);
+		if(lookup(symbol_table,lx)){
+			printf("entrou no if\n");
+		}
         if (insert(&symbol_table, new_entry(lx)) != 0){
-            printf("ERROR:%s\n", lx);
+            printf("Symbol table atrib ERROR:%s\n", lx);
+			free_table(&symbol_table);
             exit(0);
         }
     }
@@ -167,18 +172,18 @@
 //code: comando{ $$ = create_node(@1.first_line, 0, "Root", $1, NULL); syntax_tree = $$; };
 
 comando: 
- declaracoes acoes { printf("1st"); $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL); printf("primeira parada");  syntax_tree = $$; }
+ declaracoes acoes { printf("1st\n"); $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL); printf("primeira parada\n");  syntax_tree = $$; }
 | acoes { $$ = $1; syntax_tree = $$; };
 
 declaracoes: declaracao SEMICOLON{ 
-	printf("2nd");
+	printf("2nd\n");
 	Node *no_SEMICOLON = create_node(@1.first_line, pontoevirgula_node,  $2, NULL);
 
 	$$ = create_node(@1.first_line, declaracoes_node, NULL, $1, no_SEMICOLON, NULL);} ;
 
 declaracao: tipo IDF { printf("3th");Node *no_IDF = create_node(@1.first_line, declaracao_node, $2, NULL);
-$$ = create_node(@1.first_line, declaracao_node, NULL, $1, no_IDF, NULL);printf("segunda parada"); atrib($2);} 
-| tipo att {$$ = create_node(@1.first_line, declaracao_node, NULL, $1, $2, NULL); printf("segunda2 parada");} ;
+$$ = create_node(@1.first_line, declaracao_node, NULL, $1, no_IDF, NULL);printf("segunda parada\n"); atrib($2);} 
+| tipo att {$$ = create_node(@1.first_line, declaracao_node, NULL, $1, $2, NULL); printf("segunda2 parada\n"); atrib($2->children[0]->lexeme);} ;
 
 tipo: INT {
 	$$ = create_node(@1.first_line, int_node, $1, NULL); v_size=INT_SIZE; } 
@@ -243,7 +248,7 @@ att: IDF ATRIB calc {
 	Node *no_ATRIB = create_node(@1.first_line, atribuicao_node,  $2, NULL);
 	
 	$$ = create_node(@1.first_line, atribuicaolex_node, NULL, no_IDF, no_ATRIB, $3, NULL);
-	atrib($1);
+	
 	
 	/*
 	Anotação pra raciocinar como utilizar o lista.h aqui pra fazer um código TAC decente

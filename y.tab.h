@@ -157,7 +157,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 81 "nico.y"
+#line 86 "nico.y"
 
 	char* cadeia;
 	struct _node * no;

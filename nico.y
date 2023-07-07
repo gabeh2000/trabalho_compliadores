@@ -173,18 +173,19 @@
 //code: comando{ $$ = create_node(@1.first_line, 0, "Root", $1, NULL); syntax_tree = $$; };
 
 comando: 
- declaracoes acoes { printf("1st\n"); $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL); printf("primeira parada\n");  syntax_tree = $$; }
-| acoes { $$ = $1; syntax_tree = $$; };
+ declaracoes acoes { printf("1st\n"); $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL); printf("primeira parada\n");  syntax_tree = $$; cat_tac(&($$->code),  &($1->code));}
+| acoes { $$ = $1; syntax_tree = $$; cat_tac(&($$->code),  &($1->code)); };
 
 declaracoes: declaracao SEMICOLON{ 
 	printf("2nd\n");
 	Node *no_SEMICOLON = create_node(@1.first_line, pontoevirgula_node,  $2, NULL);
 
-	$$ = create_node(@1.first_line, declaracoes_node, NULL, $1, no_SEMICOLON, NULL);} ;
+	$$ = create_node(@1.first_line, declaracoes_node, NULL, $1, no_SEMICOLON, NULL);
+	cat_tac(&($$->code),  &($1->code));} ;
 
 declaracao: tipo IDF { printf("3th");Node *no_IDF = create_node(@1.first_line, declaracao_node, $2, NULL);
 $$ = create_node(@1.first_line, declaracao_node, NULL, $1, no_IDF, NULL);printf("segunda parada\n"); atrib($2);} 
-| tipo att {$$ = create_node(@1.first_line, declaracao_node, NULL, $1, $2, NULL); printf("segunda2 parada\n"); atrib($2->children[0]->lexeme);} ;
+| tipo att {$$ = create_node(@1.first_line, declaracao_node, NULL, $1, $2, NULL); printf("segunda2 parada\n"); atrib($2->children[0]->lexeme);cat_tac(&($$->code),  &($2->code));} ;
 
 tipo: INT {
 	$$ = create_node(@1.first_line, int_node, $1, NULL); v_size=INT_SIZE; } 
@@ -198,7 +199,7 @@ acoes: for {$$ = create_node(@1.first_line, for_node, NULL, $1, NULL);}
 | while {$$ = create_node(@1.first_line, while_node, NULL, $1, NULL);}
 | if {$$ = create_node(@1.first_line, if_node, NULL, $1, NULL);}
 | ifelse {$$ = create_node(@1.first_line, else_node, NULL, $1, NULL);}
-| att {$$ = $1;} ;
+| att {$$ = create_node(@1.first_line, else_node, NULL, $1, NULL); cat_tac(&($$->code),  &($1->code));} ;
 //| att {$$ = create_node(@1.first_line, atribuicao_node, NULL, $1, NULL);} ;
 
 
@@ -270,7 +271,7 @@ att: IDF ATRIB calc {
 	Também é preciso concatenar as listas de tacs, considerando que cada uma delas está dentro de um nodo, com o cat_tac
 	
 	*/
-	struct tac* new_tac = create_inst_tac(sp($1),$3->lexeme,"atribuicao","");
+	struct tac* new_tac = create_inst_tac($1,$3->lexeme,"atribuicao","");
 
  	cat_tac(&($$->code), &($3->code));
 

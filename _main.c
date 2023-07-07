@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 	}
 
 	free_table(&symbol_table);
-
+	fclose(file);
 	return 0;
 }
 

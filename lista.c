@@ -71,6 +71,9 @@ void print_inst_tac(FILE* out, Tac i){
 }
 
 void print_tac(FILE* out, Node_tac * code){
+    if(code==NULL){
+        return ;
+    }
     if(code->next!=NULL){
         print_tac(out, code->next);
     }
@@ -90,34 +93,41 @@ void print_tac(FILE* out, Node_tac * code){
 
 void append_inst_tac(Node_tac ** code, Tac * inst){
     Node_tac ** aux = code;
+    Node_tac * novo = (Node_tac*)malloc(sizeof(Node_tac));
+    novo->inst = inst;
+    if((*aux)==NULL){
+        novo->number=0;
+        novo->next = NULL;
+        novo->prev = NULL;
+        (*code)=novo;
+        return;
+    }
     while((*aux)->next!=NULL){
         (*aux)= (*aux)->next;
     }
-    Node_tac * novo = (Node_tac*)malloc(sizeof(Node_tac));
 
-    novo->inst = inst;
-    if(aux==NULL){
-        novo->number=0;
-    }
-    else{
-        novo->number=(*aux)->number+1;
-    }
+    
+    
+    novo->number=(*aux)->number+1;
+    
     novo->next = NULL;
     novo->prev = (*aux);
-    if(code==NULL){
-        (*code)=novo;
-    }
-    else{
-        (*aux)->next = novo;
-    }
+    (*aux)->next = novo;
+    
     
 }
 void cat_tac(Node_tac ** code_a, Node_tac ** code_b){
-    Node_tac ** aux = code_a;
-    while((*aux)->next!=NULL){
-        (*aux)= (*aux)->next;
+    if(*code_a==NULL){
+        *code_a=*code_b;
     }
-    (*aux)->next = (*code_b);
+    else if(*code_b!=NULL){
+        Node_tac ** aux = code_a;
+        while((*aux)->next!=NULL){
+            (*aux)= (*aux)->next;
+        }
+        (*aux)->next = (*code_b);
 
-    (*code_b)->prev = (*aux);
+        (*code_b)->prev = (*aux);
+    }
+    
 }

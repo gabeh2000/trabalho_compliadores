@@ -56,12 +56,12 @@ string  { return(STRING); }
 "["    { return(BRAKOPN);}
 ")"    { return(PARCLOSE);}
 "("    { printf("ABRE PAR\n");return(PAROPN);}
-"+"    { return(PLUS);}
+"+"    { yylval.cadeia = strdup(yytext); return(PLUS);}
 "\'"   { return(QUOTE);}
 "\""   { return(DQUOTE);}
-"-"    { return(MIN);}
-"/"    { return(BAR);}
-"*"    { return(AST);}
+"-"    {yylval.cadeia = strdup(yytext); return(MIN);}
+"/"    {yylval.cadeia = strdup(yytext); return(BAR);}
+"*"    {yylval.cadeia = strdup(yytext); return(AST);}
 "{"    { printf("ABRE CHAVE\n"); return(KOPN);}
 "}"    { printf("FECHA CHAVE\n");return(KCLOSE);}
 "<"    { printf("MENOR\n");return(LESS);}

@@ -7,6 +7,7 @@
  */
 
 #include "symbol_table.h"
+#include <string.h>
 #define EOS '\0'
 symbol_t symbol_table;
 int hashpjw(s)
@@ -86,6 +87,7 @@ entry_t* lookup(symbol_t table, char* name) {
     int hash = hashpjw(name);
     // que ser� um �ndice para acessar a tabela de s�mbolos.
     // verifica se existe ponteiro
+    printf("hash: %d\n",hash);
     if(table.entries[hash] != NULL) {
 
         struct table_node_entry * atual = table.entries[hash]; // inicia com o primeiro nodo da lista encadeada
@@ -98,12 +100,17 @@ entry_t* lookup(symbol_t table, char* name) {
     // se existe, retorna o ponteiro
 //        return table.entries[hash];
         if( ! strcmp(name, atual->entry_data->name)) { // se o "name" � igual
+            printf("foi\n");
             return atual->entry_data;
         } else { // se o "name" n�o � igual, foi at� o fim da lista encadeada e n�o encontrou, ent�o retorna NULL
+            printf("n foi\n");
+
             return NULL;
         }
     } else {
     // sen�o, retorna null
+        printf("n foi 2\n");
+
         return NULL;
     }
 }
@@ -128,6 +135,8 @@ int insert(symbol_t* table, entry_t* entry) {
 
     // calcula o hash para associ�-lo a um inteiro
     int hash = hashpjw(entry->name);
+    printf("hash insert: %d\n",hash);
+
     // e se n�o houver lista encadeada ainda
     // entao nenhum elemento foi adicionado ainda para esta chave
     // insere na tabela de s�mbolos
@@ -139,6 +148,7 @@ int insert(symbol_t* table, entry_t* entry) {
         nodo->next = table->entries[hash]; // o pr�ximo do novo elemento � o primeiro elemento da lista
         table->entries[hash] = nodo; // agora, o primeiro elemento da lista passa a ser o elemento recem criado
     }
+    printf("Simbolo adicionado\n");
 
      return 0;
 }

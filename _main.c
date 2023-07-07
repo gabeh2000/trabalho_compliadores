@@ -38,8 +38,8 @@ int main(int argc, char* argv[])
 
 	}
 	int result = yyparse();
-	/*FILE* file = fopen("lista.txt", "w");
-    print_tac(file, syntax_tree->code);*/
+	FILE* file = fopen("lista.txt", "w");
+    print_tac(file, syntax_tree->code);
 	print_table(symbol_table);
 	if(argc == 3) //testing
     //printf("Oi\n");	

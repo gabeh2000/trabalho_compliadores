@@ -961,7 +961,7 @@ YY_RULE_SETUP
 case 16:
 YY_RULE_SETUP
 #line 60 "scanner.l"
-{ return(PLUS);}
+{ yylval.cadeia = strdup(yytext); return(PLUS);}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
@@ -976,17 +976,17 @@ YY_RULE_SETUP
 case 19:
 YY_RULE_SETUP
 #line 63 "scanner.l"
-{ return(MIN);}
+{yylval.cadeia = strdup(yytext); return(MIN);}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 64 "scanner.l"
-{ return(BAR);}
+{yylval.cadeia = strdup(yytext); return(BAR);}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 65 "scanner.l"
-{ return(AST);}
+{yylval.cadeia = strdup(yytext); return(AST);}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP

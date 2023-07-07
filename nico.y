@@ -28,14 +28,14 @@
 	extern symbol_t symbol_table;
 	
 	int v_size = 0;
-	int temp_size = 0;
+	int t_size = 0;
 	int max_t_size = 0;
 	int v_desloc = 0;
 	int reg = 0;
 	
 	entry_t *new_entry(char *lx){
         entry_t *new_entry = (entry_t *)malloc(sizeof(entry_t));
-        new_entry->name = lx;
+        new_entry->name = strdup(lx);
         new_entry->desloc = v_desloc;
         new_entry->size = v_size;
         v_desloc += new_entry->size;
@@ -62,6 +62,7 @@
 
 	char *sp(char *id){
 		entry_t* aux = lookup(symbol_table, id);
+		
 		if(aux != NULL){       
 			char *t = malloc(sizeof(char)*2);
 			sprintf(t, "%03d(SP)", aux->desloc);
@@ -263,10 +264,17 @@ att: IDF ATRIB calc {
 	ok, com isso a gente tem uma noção do que tem que fazer, quando for um terminal a gente tem que transformar ele em um SP caso seja um IDF
 	caso a operação seja com mais de dois argumentos precisaremos de guardar alguns resultados em um RX, aka temporário
 
-
+	Blz, com isso tirado do caminho, falta definirmos como vamos usar o resto das funções do lista.h
+	Nossa lista está dentro do nosso nodo
+	Então, toda a vez que a gente gerar um tac temos que colocá-lo dentro de um node tac com o append_inst_tac
+	Também é preciso concatenar as listas de tacs, considerando que cada uma delas está dentro de um nodo, com o cat_tac
 	
 	*/
-	
+	struct tac* new_tac = create_inst_tac(sp($1),$3->lexeme,"atribuicao","");
+
+ 	cat_tac(&($$->code), &($3->code));
+
+ 	append_inst_tac(&($$->code),new_tac);
 	};
 
 expressao: expr {$$ = create_node(@1.first_line, expr_node, NULL, $1, NULL);} 
@@ -310,7 +318,15 @@ calc: /*VALOR {$$ = create_node(@1.first_line, lvalue_node, NULL, $1, NULL);}
 AUX_idf_val {$$ = create_node(@1.first_line, lvalue_node, NULL, $1, NULL);}
 | calc PLUS calc       {
 	Node *no_PLUS = create_node(@1.first_line, soma_node, $2, NULL);
-	$$ = create_node(@1.first_line, soma_node, NULL, $1, no_PLUS, $3, NULL);}
+	$$ = create_node(@1.first_line, soma_node, rx(t_size), $1, no_PLUS, $3, NULL);
+	t_size+=v_size;
+	struct tac* new_tac = create_inst_tac($$->lexeme,$1->lexeme,$2,$3->lexeme);
+
+ 	cat_tac(&($$->code), &($1->code));
+
+ 	cat_tac(&($$->code), &($3->code));
+
+ 	append_inst_tac(&($$->code),new_tac); }
 | calc MIN calc       {
 	Node *no_MIN = create_node(@1.first_line, sub_node, $2, NULL);
 	$$ = create_node(@1.first_line, sub_node, NULL, $1, no_MIN, $3, NULL);}

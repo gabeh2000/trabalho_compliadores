@@ -43,9 +43,10 @@
     }
 
     void atrib(char *lx){
-		print_table(symbol_table);
+		//print_table(symbol_table);
 		if(lookup(symbol_table,lx)){
 			printf("entrou no if\n");
+			return;
 		}
         if (insert(&symbol_table, new_entry(lx)) != 0){
             printf("Symbol table atrib ERROR:%s\n", lx);
@@ -174,7 +175,7 @@
 
 comando: 
  declaracoes acoes { printf("1st\n"); $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL); printf("primeira parada\n");  syntax_tree = $$; cat_tac(&($$->code),  &($1->code));}
-| acoes { $$ = $1; syntax_tree = $$; cat_tac(&($$->code),  &($1->code)); };
+| acoes { $$ = create_node(@1.first_line, code_node, NULL, $1, NULL); syntax_tree = $$; cat_tac(&($$->code),  &($1->code)); };
 
 declaracoes: declaracao SEMICOLON{ 
 	printf("2nd\n");
@@ -184,8 +185,8 @@ declaracoes: declaracao SEMICOLON{
 	cat_tac(&($$->code),  &($1->code));} ;
 
 declaracao: tipo IDF { printf("3th");Node *no_IDF = create_node(@1.first_line, declaracao_node, $2, NULL);
-$$ = create_node(@1.first_line, declaracao_node, NULL, $1, no_IDF, NULL);printf("segunda parada\n"); atrib($2);} 
-| tipo att {$$ = create_node(@1.first_line, declaracao_node, NULL, $1, $2, NULL); printf("segunda2 parada\n"); atrib($2->children[0]->lexeme);cat_tac(&($$->code),  &($2->code));} ;
+$$ = create_node(@1.first_line, declaracao_node, NULL, $1, no_IDF, NULL);printf("segunda parada\n"); atrib($2);cat_tac(&($$->code),  &($1->code));} 
+| tipo att {$$ = create_node(@1.first_line, declaracao_node, NULL, $1, $2, NULL); printf("segunda2 parada\n"); cat_tac(&($$->code),  &($2->code));} ;
 
 tipo: INT {
 	$$ = create_node(@1.first_line, int_node, $1, NULL); v_size=INT_SIZE; } 
@@ -251,6 +252,7 @@ att: IDF ATRIB calc {
 	
 	$$ = create_node(@1.first_line, atribuicaolex_node, NULL, no_IDF, no_ATRIB, $3, NULL);
 	
+	atrib($1);
 	
 	/*
 	Anotação pra raciocinar como utilizar o lista.h aqui pra fazer um código TAC decente
@@ -271,7 +273,7 @@ att: IDF ATRIB calc {
 	Também é preciso concatenar as listas de tacs, considerando que cada uma delas está dentro de um nodo, com o cat_tac
 	
 	*/
-	struct tac* new_tac = create_inst_tac($1,$3->lexeme,"atribuicao","");
+	Tac* new_tac = create_inst_tac(sp($1),$3->lexeme,"atribuicao","");
 
  	cat_tac(&($$->code), &($3->code));
 
@@ -293,12 +295,24 @@ $$ = create_node(@1.first_line, iflex_node, NULL, no_NOT, $2, NULL);};
 /*AUX_expr: AUX_idf_val {$$ = create_node(@1.first_line, idf_node, NULL, $1, NULL);} 
 | calc {$$ = create_node(@1.first_line, calc_node, NULL, $1, NULL);} ;*/
 
+
+//Criar codes com atributos vazios
 AUX_idf_val: IDF {
-	$$ = create_node(@1.first_line, idf_node, $1, NULL);} 
+	$$ = create_node(@1.first_line, idf_node, $1, NULL); 
+	Tac* tac_vazio = create_inst_tac("","","","");
+
+	append_inst_tac(&($$->code),tac_vazio);
+	} 
 | INT_LIT {
-	$$ = create_node(@1.first_line, lvalue_node, $1, NULL);} 
+	$$ = create_node(@1.first_line, lvalue_node, $1, NULL);
+	Tac* tac_vazio = create_inst_tac("","","","");
+
+	append_inst_tac(&($$->code),tac_vazio);	} 
 | F_LIT {
-	$$ = create_node(@1.first_line, lvalue_node, $1, NULL);};
+	$$ = create_node(@1.first_line, lvalue_node, $1, NULL);
+	Tac* tac_vazio = create_inst_tac("","","","");
+
+	append_inst_tac(&($$->code),tac_vazio);	};
 
 
 comparador: GREAT {
@@ -314,14 +328,17 @@ comparador: GREAT {
 | LE {
 	$$ = create_node(@1.first_line, menorigual_node, $1, NULL);} ;
 
-calc: /*VALOR {$$ = create_node(@1.first_line, lvalue_node, NULL, $1, NULL);}
-| IDF {$$ = create_node(@1.first_line, idf_node, NULL, $1, NULL);}*/
-AUX_idf_val {$$ = create_node(@1.first_line, lvalue_node, NULL, $1, NULL);}
+calc:
+//concatenar cisas aqui
+AUX_idf_val {$$ = create_node(@1.first_line, lvalue_node, $1->lexeme, $1, NULL);
+	cat_tac(&($$->code),&($1->code));
+}
 | calc PLUS calc       {
 	Node *no_PLUS = create_node(@1.first_line, soma_node, $2, NULL);
 	$$ = create_node(@1.first_line, soma_node, rx(t_size), $1, no_PLUS, $3, NULL);
+	//entry_t* aux = lookup(symbol_table,);
 	t_size+=v_size;
-	struct tac* new_tac = create_inst_tac($$->lexeme,$1->lexeme,$2,$3->lexeme);
+	Tac* new_tac = create_inst_tac($$->lexeme,$1->lexeme,$2,$3->lexeme);
 
  	cat_tac(&($$->code), &($1->code));
 

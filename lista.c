@@ -71,12 +71,13 @@ void print_inst_tac(FILE* out, Tac i){
 }
 
 void print_tac(FILE* out, Node_tac * code){
-    if(code==NULL){
-        return ;
-    }
     if(code->next!=NULL){
         print_tac(out, code->next);
     }
+    if(code==NULL){
+        return ;
+    }
+    
     if(code!=NULL){
         if(code->number<10){
             fprintf(out,"00");
@@ -89,7 +90,9 @@ void print_tac(FILE* out, Node_tac * code){
         print_inst_tac(out, * code->inst);
 
     }
+    
 }
+
 
 void append_inst_tac(Node_tac ** code, Tac * inst){
     Node_tac ** aux = code;

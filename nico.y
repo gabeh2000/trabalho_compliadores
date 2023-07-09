@@ -174,7 +174,7 @@
 //code: comando{ $$ = create_node(@1.first_line, 0, "Root", $1, NULL); syntax_tree = $$; };
 
 comando: 
- declaracoes acoes { printf("1st\n"); $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL); printf("primeira parada\n");  syntax_tree = $$; cat_tac(&($$->code),  &($1->code));}
+ declaracoes acoes { printf("1st\n"); $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL); printf("primeira parada\n");  syntax_tree = $$; cat_tac(&($$->code),  &($1->code)); cat_tac(&($$->code),  &($2->code));}
 | acoes { $$ = create_node(@1.first_line, code_node, NULL, $1, NULL); syntax_tree = $$; cat_tac(&($$->code),  &($1->code)); };
 
 declaracoes: declaracao SEMICOLON{ 
@@ -274,6 +274,7 @@ att: IDF ATRIB calc {
 	
 	*/
 	Tac* new_tac = create_inst_tac(sp($1),$3->lexeme,"atribuicao","");
+	printf("\n\n Tac dentro do att %s := %s \n",sp($1),$3->lexeme);
 
  	cat_tac(&($$->code), &($3->code));
 
@@ -339,6 +340,8 @@ AUX_idf_val {$$ = create_node(@1.first_line, lvalue_node, $1->lexeme, $1, NULL);
 	//entry_t* aux = lookup(symbol_table,);
 	t_size+=v_size;
 	Tac* new_tac = create_inst_tac($$->lexeme,$1->lexeme,$2,$3->lexeme);
+
+	printf("\n\n Tac dentro do calc %s := %s %s %s \n",$$->lexeme,$1->lexeme,$2,$3->lexeme);
 
  	cat_tac(&($$->code), &($1->code));
 

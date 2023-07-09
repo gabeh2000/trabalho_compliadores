@@ -66,7 +66,7 @@ void print_inst_tac(FILE* out, Tac i){
         if(strcmp(i.op,"Print")==0){}
     }
     
-
+    printf("%s := %s %s %s \n",i.res, i.arg1, opr, i.arg2);
     fprintf(out, "%s := %s %s %s \n",i.res, i.arg1, opr, i.arg2);
 }
 
@@ -87,7 +87,7 @@ void print_tac(FILE* out, Node_tac * code){
         }
         
         fprintf(out,"%d: ",code->number);
-        print_inst_tac(out, * code->inst);
+        print_inst_tac(out, *code->inst);
 
     }
     

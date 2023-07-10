@@ -28,6 +28,7 @@
 	extern symbol_t symbol_table;
 	
 	int v_size = 0;
+	int t_size_now = 0;
 	int t_size = 0;
 	int max_t_size = 0;
 	int v_desloc = 0;
@@ -137,6 +138,7 @@
 %token<cadeia> LESS 
 %token<cadeia> GREAT 
 %token<cadeia> STRING 
+%token<cadeia> PRINT 
 
 %token<cadeia> IDF 
 %token<cadeia> INT_LIT 
@@ -162,6 +164,8 @@
 %type<no> AUX_idf_val
 %type<no> ifelse
 %type<no> comando
+%type<no> print
+%type<no> texto
 
 
 /* demais types ... */
@@ -200,6 +204,7 @@ acoes: for {$$ = create_node(@1.first_line, for_node, NULL, $1, NULL);}
 | while {$$ = create_node(@1.first_line, while_node, NULL, $1, NULL);}
 | if {$$ = create_node(@1.first_line, if_node, NULL, $1, NULL);}
 | ifelse {$$ = create_node(@1.first_line, else_node, NULL, $1, NULL);}
+| print {$$ = create_node(@1.first_line, print_node, NULL, $1, NULL);cat_tac(&($$->code),  &($1->code));}
 | att {$$ = create_node(@1.first_line, else_node, NULL, $1, NULL); cat_tac(&($$->code),  &($1->code));} ;
 //| att {$$ = create_node(@1.first_line, atribuicao_node, NULL, $1, NULL);} ;
 
@@ -241,7 +246,38 @@ ifelse: if ELSE KOPN comando KCLOSE {
 	Node *no_ELSE = create_node(@1.first_line, elselex_node, $2, NULL);
 	Node *no_KOPN = create_node(@1.first_line, abrechaves_node,  $3, NULL);
 	Node *no_KCLOSE = create_node(@1.first_line, fechachaves_node, $5, NULL);
-	$$ = create_node(@1.first_line, elselex_node, NULL, $1, no_ELSE, no_KOPN, $4,no_KCLOSE, NULL);};
+	$$ = create_node(@1.first_line, elselex_node, NULL, $1, no_ELSE, no_KOPN, $4,no_KCLOSE, NULL); };
+
+print: PRINT PAROPN texto PARCLOSE SEMICOLON {
+	
+	Node *no_PRINT = create_node(@1.first_line, print_lex_node, $1, NULL);
+	Node *no_PAROPN = create_node(@1.first_line, abrepar_node, $2, NULL);
+	Node *no_PARCLOSE = create_node(@1.first_line, fechapar_node,  $4, NULL);
+	Node *no_SEMICOLON = create_node(@1.first_line, pontoevirgula_node,  $5, NULL);
+
+	$$ = create_node(@1.first_line, print_lex_node, NULL, no_PRINT, no_PAROPN, $3, no_PARCLOSE,no_SEMICOLON, NULL);
+	
+	Tac* new_tac = create_inst_tac(sp($3->lexeme),"","PRINT","");
+	//printf("\n\n Tac dentro do att %s := %s \n",sp($1),$3->lexeme);
+
+ 	cat_tac(&($$->code), &($3->code));
+
+ 	append_inst_tac(&($$->code),new_tac);
+
+	} ;
+
+texto: TEXT{$$ = create_node(@1.first_line, text_lex_node, $1, NULL); 
+	Tac* tac_vazio = create_inst_tac("","","","");
+	t_size_now = CHAR_SIZE;
+	append_inst_tac(&($$->code),tac_vazio);}
+|
+IDF{
+	$$ = create_node(@1.first_line, idf_node, $1, NULL); 
+	Tac* tac_vazio = create_inst_tac("","","","");
+	entry_t* aux = lookup(symbol_table,$1);
+	t_size_now = aux->size;
+	append_inst_tac(&($$->code),tac_vazio);}
+;
 
 /*att: IDF ATRIB VALOR {$$ = create_node(@1.first_line, atribuicaolex_node, NULL, $1, $2, $3, NULL);}
 | IDF ATRIB calc {$$ = create_node(@1.first_line, atribuicaolex_node, NULL, $1, $2, $3, NULL);} ;*/
@@ -301,18 +337,20 @@ $$ = create_node(@1.first_line, iflex_node, NULL, no_NOT, $2, NULL);};
 AUX_idf_val: IDF {
 	$$ = create_node(@1.first_line, idf_node, $1, NULL); 
 	Tac* tac_vazio = create_inst_tac("","","","");
-
+	entry_t* aux = lookup(symbol_table,$1);
+	t_size_now = aux->size;
 	append_inst_tac(&($$->code),tac_vazio);
 	} 
 | INT_LIT {
 	$$ = create_node(@1.first_line, lvalue_node, $1, NULL);
 	Tac* tac_vazio = create_inst_tac("","","","");
+	t_size_now = INT_SIZE;
 
 	append_inst_tac(&($$->code),tac_vazio);	} 
 | F_LIT {
 	$$ = create_node(@1.first_line, lvalue_node, $1, NULL);
 	Tac* tac_vazio = create_inst_tac("","","","");
-
+	t_size_now = FLOAT_SIZE;
 	append_inst_tac(&($$->code),tac_vazio);	};
 
 
@@ -337,8 +375,7 @@ AUX_idf_val {$$ = create_node(@1.first_line, lvalue_node, $1->lexeme, $1, NULL);
 | calc PLUS calc       {
 	Node *no_PLUS = create_node(@1.first_line, soma_node, $2, NULL);
 	$$ = create_node(@1.first_line, soma_node, rx(t_size), $1, no_PLUS, $3, NULL);
-	//entry_t* aux = lookup(symbol_table,);
-	t_size+=v_size;
+	t_size+=t_size_now;
 	Tac* new_tac = create_inst_tac($$->lexeme,$1->lexeme,$2,$3->lexeme);
 
 	printf("\n\n Tac dentro do calc %s := %s %s %s \n",$$->lexeme,$1->lexeme,$2,$3->lexeme);
@@ -350,17 +387,56 @@ AUX_idf_val {$$ = create_node(@1.first_line, lvalue_node, $1->lexeme, $1, NULL);
  	append_inst_tac(&($$->code),new_tac); }
 | calc MIN calc       {
 	Node *no_MIN = create_node(@1.first_line, sub_node, $2, NULL);
-	$$ = create_node(@1.first_line, sub_node, NULL, $1, no_MIN, $3, NULL);}
+	$$ = create_node(@1.first_line, sub_node, rx(t_size), $1, no_MIN, $3, NULL);
+	
+	t_size+=t_size_now;
+	Tac* new_tac = create_inst_tac($$->lexeme,$1->lexeme,$2,$3->lexeme);
+
+	printf("\n\n Tac dentro do calc %s := %s %s %s \n",$$->lexeme,$1->lexeme,$2,$3->lexeme);
+
+ 	cat_tac(&($$->code), &($1->code));
+
+ 	cat_tac(&($$->code), &($3->code));
+
+ 	append_inst_tac(&($$->code),new_tac);
+	}
 | calc AST calc       {
 	Node *no_MULTI = create_node(@1.first_line, multi_node, $2, NULL);
-	$$ = create_node(@1.first_line, multi_node, NULL, $1, no_MULTI, $3, NULL);}
+	$$ = create_node(@1.first_line, multi_node, rx(t_size), $1, no_MULTI, $3, NULL);
+
+	t_size+=t_size_now;
+	Tac* new_tac = create_inst_tac($$->lexeme,$1->lexeme,$2,$3->lexeme);
+
+	printf("\n\n Tac dentro do calc %s := %s %s %s \n",$$->lexeme,$1->lexeme,$2,$3->lexeme);
+
+ 	cat_tac(&($$->code), &($1->code));
+
+ 	cat_tac(&($$->code), &($3->code));
+
+ 	append_inst_tac(&($$->code),new_tac);
+	}
 | calc BAR calc       {
 	Node *no_BAR = create_node(@1.first_line, div_node, $2, NULL);
-	$$ = create_node(@1.first_line, div_node, NULL, $1, no_BAR, $3, NULL);}
+	$$ = create_node(@1.first_line, div_node, rx(t_size), $1, no_BAR, $3, NULL);
+
+	t_size+=t_size_now;
+	Tac* new_tac = create_inst_tac($$->lexeme,$1->lexeme,$2,$3->lexeme);
+
+	printf("\n\n Tac dentro do calc %s := %s %s %s \n",$$->lexeme,$1->lexeme,$2,$3->lexeme);
+
+ 	cat_tac(&($$->code), &($1->code));
+
+ 	cat_tac(&($$->code), &($3->code));
+
+ 	append_inst_tac(&($$->code),new_tac);
+	}
 | PAROPN calc PARCLOSE       {
 	Node *no_PAROPN = create_node(@1.first_line, abrepar_node,  $1, NULL);
 	Node *no_PARCLOSE = create_node(@1.first_line, fechapar_node,  $3, NULL);
-	$$ = create_node(@1.first_line, calc_node, NULL, no_PAROPN, $2, no_PARCLOSE, NULL);} ;
+	$$ = create_node(@1.first_line, calc_node, NULL, no_PAROPN, $2, no_PARCLOSE, NULL);
+	
+	cat_tac(&($$->code),&($2->code));
+	} ;
 
 
 /*demais codes ..*/

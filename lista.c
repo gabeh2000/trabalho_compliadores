@@ -26,69 +26,70 @@ Tac* create_inst_tac(const char* res, const char* arg1,const char* op, const cha
 }
 
 void print_inst_tac(FILE* out, Tac i){
-    char opr[5];
-    if(strchr(i.arg1,'.')!=NULL){
-        if(strcmp(i.op,"+")==0){
-            char* aux = "FADD";
-            strcpy(opr,aux);
-        }
-        if(strcmp(i.op,"*")==0){
-            char* aux = "FMUL";
-            strcpy(opr,aux);
-        }
-        if(strcmp(i.op,"/")==0){
-            char* aux = "FDIV";
-            strcpy(opr,aux);
-        }
-        if(strcmp(i.op,"-")==0){
-            char* aux = "FSUB";
-            strcpy(opr,aux);
-        }
-        if(strcmp(i.op,"Print")==0){}
+    char * opr = strdup("");
+
+    if(strcmp(i.op,"PRINT")==0){
+        fprintf(out, "PRINT %s \n",i.res);
+        
     }
     else{
-        if(strcmp(i.op,"+")==0){
-            char* aux = "ADD";
-            strcpy(opr,aux);
+        if(strchr(i.arg1,'.')!=NULL){
+            if(strcmp(i.op,"+")==0){
+                char* aux = "FADD";
+                opr = strdup(aux);
+            }
+            if(strcmp(i.op,"*")==0){
+                char* aux = "FMUL";
+                opr = strdup(aux);
+            }
+            if(strcmp(i.op,"/")==0){
+                char* aux = "FDIV";
+                opr =strdup(aux);
+            }
+            if(strcmp(i.op,"-")==0){
+                char* aux = "FSUB";
+                opr =strdup(aux);
+            }
+            
         }
-        if(strcmp(i.op,"*")==0){
-            char* aux = "MUL";
-            strcpy(opr,aux);
+        else{
+            if(strcmp(i.op,"+")==0){
+                char* aux = "ADD";
+                opr =strdup(aux);
+            }
+            if(strcmp(i.op,"*")==0){
+                char* aux = "MUL";
+                opr =strdup(aux);
+            }
+            if(strcmp(i.op,"/")==0){
+                char* aux = "DIV";
+                opr =strdup(aux);
+            }
+            if(strcmp(i.op,"-")==0){
+                char* aux = "SUB";
+                opr =strdup(aux);
+            }
+            
         }
-        if(strcmp(i.op,"/")==0){
-            char* aux = "DIV";
-            strcpy(opr,aux);
-        }
-        if(strcmp(i.op,"-")==0){
-            char* aux = "SUB";
-            strcpy(opr,aux);
-        }
-        if(strcmp(i.op,"Print")==0){}
+        
+        printf("%s := %s %s %s \n",i.res, i.arg1, opr, i.arg2);
+        fprintf(out, "%s := %s %s %s \n",i.res, i.arg1, opr, i.arg2);
     }
     
-    printf("%s := %s %s %s \n",i.res, i.arg1, opr, i.arg2);
-    fprintf(out, "%s := %s %s %s \n",i.res, i.arg1, opr, i.arg2);
 }
 
 void print_tac(FILE* out, Node_tac * code){
-    if(code->next!=NULL){
-        print_tac(out, code->next);
-    }
     if(code==NULL){
         return ;
     }
     
-    if(code!=NULL){
-        if(code->number<10){
-            fprintf(out,"00");
-        }
-        else if(code->number<100){
-            fprintf(out,"0");
-        }
-        
-        fprintf(out,"%d: ",code->number);
+    if(code!=NULL){    
+        fprintf(out,"%.3d: ",code->number);
         print_inst_tac(out, *code->inst);
 
+    }
+    if(code->next!=NULL){
+        print_tac(out, code->next);
     }
     
 }
@@ -103,20 +104,18 @@ void append_inst_tac(Node_tac ** code, Tac * inst){
         novo->next = NULL;
         novo->prev = NULL;
         (*code)=novo;
-        return;
     }
-    while((*aux)->next!=NULL){
-        (*aux)= (*aux)->next;
-    }
+    else{
 
-    
-    
-    novo->number=(*aux)->number+1;
-    
-    novo->next = NULL;
-    novo->prev = (*aux);
-    (*aux)->next = novo;
-    
+        while((*aux)->next!=NULL){
+            (*aux)= (*aux)->next;
+        }
+        novo->number=(*aux)->number+1;
+        
+        novo->next = NULL;
+        novo->prev = (*aux);
+        (*aux)->next = novo;
+    }
     
 }
 void cat_tac(Node_tac ** code_a, Node_tac ** code_b){

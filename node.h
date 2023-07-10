@@ -95,6 +95,11 @@ typedef int Node_type;
 #define aux_node 567
 #define calc_node 568
 #define else_node 569
+#define print_node 570
+#define print_lex_node 571
+#define text_lex_node 572
+
+
 
 
 /** Estrutura de dados parcial para o no da arvore. */

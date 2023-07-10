@@ -87,13 +87,15 @@ void    { return(VOID);}
 "NULL"    { return(NUL);}
 const    { return(CONST);}
 static    { return(STATIC);}
+print { return(PRINT);}
 {inteiro}   { yylval.cadeia = strdup(yytext);
                     printf("INTEIRO\n");return(INT_LIT);}
 {num}     {yylval.cadeia = strdup(yytext);
                     printf("NUM\n");return(F_LIT);}
 {var}    {yylval.cadeia = strdup(yytext);
                     printf("VAR\n");return(IDF);}
-{text}    {return(TEXT);}
+{text}    {yylval.cadeia = strdup(yytext);
+                    return(TEXT);}
 [ \n\t\r]+ { printf("BRANCO\n"); }
 
   /* Tratamento dos erros lexicais: a regra seguinte pega tudo o que nao

@@ -1,4 +1,4 @@
-/** @file symbol_table.h
+   /** @file symbol_table.h
  *  @version 1.1
  */
 #ifndef _SYMBOL_TABLE_H_

@@ -96,9 +96,10 @@ extern int yydebug;
     LESS = 302,
     GREAT = 303,
     STRING = 304,
-    IDF = 305,
-    INT_LIT = 306,
-    F_LIT = 307
+    PRINT = 305,
+    IDF = 306,
+    INT_LIT = 307,
+    F_LIT = 308
   };
 #endif
 /* Tokens.  */
@@ -149,20 +150,21 @@ extern int yydebug;
 #define LESS 302
 #define GREAT 303
 #define STRING 304
-#define IDF 305
-#define INT_LIT 306
-#define F_LIT 307
+#define PRINT 305
+#define IDF 306
+#define INT_LIT 307
+#define F_LIT 308
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 88 "nico.y"
+#line 89 "nico.y"
 
 	char* cadeia;
 	struct _node * no;
 
-#line 166 "y.tab.h"
+#line 168 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 				argv[0], argv[1]);
 		exit(-1);
 	}
-
+	
 	progname = argv[0];
     FILE *saida=fopen(argv[2],"w");
 	if(init_table(&symbol_table)){

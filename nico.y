@@ -6,6 +6,7 @@
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <string.h>
+	#include <assert.h>
 	#include "node.h"
 	#include "symbol_table.h"
 	#include "lista.h"
@@ -33,7 +34,7 @@
 	int max_t_size = 0;
 	int v_desloc = 0;
 	int reg = 0;
-	
+	int file_num = 0;
 	entry_t *new_entry(char *lx){
         entry_t *new_entry = (entry_t *)malloc(sizeof(entry_t));
         new_entry->name = strdup(lx);
@@ -146,7 +147,7 @@
 
 /* demais tokens ...*/
 
-//%type<no> code
+%type<no> code
 %type<no> acoes
 %type<no> declaracoes
 %type<no> declaracao
@@ -170,27 +171,63 @@
 
 /* demais types ... */
 
-%start comando
+%start code
 
  /* A completar com seus tokens - compilar com 'yacc -d' */
 
 %%
-//code: comando{ $$ = create_node(@1.first_line, 0, "Root", $1, NULL); syntax_tree = $$; };
+code: comando{ $$ = create_node(@1.first_line, 0, "Root", $1, NULL); syntax_tree = $$; cat_tac(&($$->code),  &($1->code)); 
+		char *t = malloc(sizeof(char)*12);
+		sprintf(t, "lista%d.txt", file_num++);
+		FILE* file = fopen(t, "w");
+    	print_tac(file, $$->code);
+};
+//tirar o ações do declacacoes acoes
+comando:                               { $$ = create_node(1, 0, "Vazio", NULL); }
+| declaracoes comando{ $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL);  
+cat_tac(&($$->code),  &($1->code)); cat_tac(&($$->code),  &($2->code));
+		char *t = malloc(sizeof(char)*12);
+		sprintf(t, "lista%d.txt", file_num++);
+		FILE* file = fopen(t, "w");
+    	print_tac(file, $$->code);}
+| acoes comando{ $$ = create_node(@1.first_line, code_node, NULL, $1,$2, NULL); 
+cat_tac(&($$->code),  &($1->code));cat_tac(&($$->code),  &($2->code)); 
+		char *t = malloc(sizeof(char)*12);
+		sprintf(t, "lista%d.txt", file_num++);
+		FILE* file = fopen(t, "w");
+    	print_tac(file, $$->code);
+};
 
-comando: 
- declaracoes acoes { printf("1st\n"); $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL); printf("primeira parada\n");  syntax_tree = $$; cat_tac(&($$->code),  &($1->code)); cat_tac(&($$->code),  &($2->code));}
-| acoes { $$ = create_node(@1.first_line, code_node, NULL, $1, NULL); syntax_tree = $$; cat_tac(&($$->code),  &($1->code)); };
-
-declaracoes: declaracao SEMICOLON{ 
-	printf("2nd\n");
+declaracoes: declaracao SEMICOLON { 
 	Node *no_SEMICOLON = create_node(@1.first_line, pontoevirgula_node,  $2, NULL);
 
 	$$ = create_node(@1.first_line, declaracoes_node, NULL, $1, no_SEMICOLON, NULL);
-	cat_tac(&($$->code),  &($1->code));} ;
+	cat_tac(&($$->code),  &($1->code));
+	
+		char *t = malloc(sizeof(char)*12);
+		sprintf(t, "lista%d.txt", file_num++);
+		FILE* file = fopen(t, "w");
+    	print_tac(file, $$->code);
+	
+	} 
 
-declaracao: tipo IDF { printf("3th");Node *no_IDF = create_node(@1.first_line, declaracao_node, $2, NULL);
-$$ = create_node(@1.first_line, declaracao_node, NULL, $1, no_IDF, NULL);printf("segunda parada\n"); atrib($2);cat_tac(&($$->code),  &($1->code));} 
-| tipo att {$$ = create_node(@1.first_line, declaracao_node, NULL, $1, $2, NULL); printf("segunda2 parada\n"); cat_tac(&($$->code),  &($2->code));} ;
+	;
+
+declaracao: tipo IDF { Node *no_IDF = create_node(@1.first_line, declaracao_node, $2, NULL);
+$$ = create_node(@1.first_line, declaracao_node, NULL, $1, no_IDF, NULL);
+ atrib($2);cat_tac(&($$->code),  &($1->code));
+ 		char *t = malloc(sizeof(char)*12);
+		sprintf(t, "lista%d.txt", file_num++);
+		FILE* file = fopen(t, "w");
+    	print_tac(file, $$->code);
+ } 
+| tipo att {$$ = create_node(@1.first_line, declaracao_node, NULL, $1, $2, NULL); cat_tac(&($$->code),  &($2->code));
+
+		char *t = malloc(sizeof(char)*12);
+		sprintf(t, "lista%d.txt", file_num++);
+		FILE* file = fopen(t, "w");
+    	print_tac(file, $$->code);
+} ;
 
 tipo: INT {
 	$$ = create_node(@1.first_line, int_node, $1, NULL); v_size=INT_SIZE; } 
@@ -205,7 +242,13 @@ acoes: for {$$ = create_node(@1.first_line, for_node, NULL, $1, NULL);}
 | if {$$ = create_node(@1.first_line, if_node, NULL, $1, NULL);}
 | ifelse {$$ = create_node(@1.first_line, else_node, NULL, $1, NULL);}
 | print {$$ = create_node(@1.first_line, print_node, NULL, $1, NULL);cat_tac(&($$->code),  &($1->code));}
-| att {$$ = create_node(@1.first_line, else_node, NULL, $1, NULL); cat_tac(&($$->code),  &($1->code));} ;
+| att {$$ = create_node(@1.first_line, atribuicao_node, NULL, $1, NULL); cat_tac(&($$->code),  &($1->code));
+		char *t = malloc(sizeof(char)*12);
+		sprintf(t, "lista%d.txt", file_num++);
+		FILE* file = fopen(t, "w");
+    	print_tac(file, $$->code);
+
+} ;
 //| att {$$ = create_node(@1.first_line, atribuicao_node, NULL, $1, NULL);} ;
 
 
@@ -315,6 +358,12 @@ att: IDF ATRIB calc {
  	cat_tac(&($$->code), &($3->code));
 
  	append_inst_tac(&($$->code),new_tac);
+	t_size = 0;
+
+	char *t = malloc(sizeof(char)*12);
+		sprintf(t, "lista%d.txt", file_num++);
+		FILE* file = fopen(t, "w");
+    	print_tac(file, $$->code);
 	};
 
 expressao: expr {$$ = create_node(@1.first_line, expr_node, NULL, $1, NULL);} 
@@ -368,7 +417,7 @@ comparador: GREAT {
 	$$ = create_node(@1.first_line, menorigual_node, $1, NULL);} ;
 
 calc:
-//concatenar cisas aqui
+//concatenar coisas aqui
 AUX_idf_val {$$ = create_node(@1.first_line, lvalue_node, $1->lexeme, $1, NULL);
 	cat_tac(&($$->code),&($1->code));
 }
@@ -384,7 +433,12 @@ AUX_idf_val {$$ = create_node(@1.first_line, lvalue_node, $1->lexeme, $1, NULL);
 
  	cat_tac(&($$->code), &($3->code));
 
- 	append_inst_tac(&($$->code),new_tac); }
+ 	append_inst_tac(&($$->code),new_tac); 
+	char *t = malloc(sizeof(char)*12);
+		sprintf(t, "lista%d.txt", file_num++);
+		FILE* file = fopen(t, "w");
+    	print_tac(file, $$->code);
+	}
 | calc MIN calc       {
 	Node *no_MIN = create_node(@1.first_line, sub_node, $2, NULL);
 	$$ = create_node(@1.first_line, sub_node, rx(t_size), $1, no_MIN, $3, NULL);

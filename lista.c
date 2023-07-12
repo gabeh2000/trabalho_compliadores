@@ -15,13 +15,16 @@ Tac* create_inst_tac(const char* res, const char* arg1,const char* op, const cha
 
     if (res != NULL)
         strcpy(taque->res, res);
+        printf("\n\n\ncreate tac r: %s",res);
     if (arg1 != NULL)
         strcpy(taque->arg1, arg1);
+        printf("\n\n\ncreate tac a1: %s",arg1);
     if (arg2 != NULL)
         strcpy(taque->arg2, arg2);
+        printf("\n\n\ncreate tac a2: %s\n",arg2);
     if (op != NULL)
         strcpy(taque->op, op);
-
+    
     return taque;
 }
 
@@ -79,10 +82,6 @@ void print_inst_tac(FILE* out, Tac i){
 }
 
 void print_tac(FILE* out, Node_tac * code){
-    if(code==NULL){
-        return ;
-    }
-    
     if(code!=NULL){    
         fprintf(out,"%.3d: ",code->number);
         print_inst_tac(out, *code->inst);
@@ -99,10 +98,14 @@ void append_inst_tac(Node_tac ** code, Tac * inst){
     Node_tac ** aux = code;
     Node_tac * novo = (Node_tac*)malloc(sizeof(Node_tac));
     novo->inst = inst;
+    novo->number = 0;
+    // printf("\n\n\nappend r: %s",novo->inst->res);
+    // printf("\n\n\nappend a1: %s",novo->inst->arg1);
+    // printf("\n\n\nappend a2: %s\n",novo->inst->arg2);
+
     if((*aux)==NULL){
-        novo->number=0;
-        novo->next = NULL;
         novo->prev = NULL;
+        novo->next = NULL;
         (*code)=novo;
     }
     else{
@@ -112,24 +115,36 @@ void append_inst_tac(Node_tac ** code, Tac * inst){
         }
         novo->number=(*aux)->number+1;
         
-        novo->next = NULL;
-        novo->prev = (*aux);
         (*aux)->next = novo;
+        novo->prev = (*aux);
+        
     }
-    
+
+    struct node_tac *p = NULL;
+    int i = 0;
+    p = *code;
+    while (p != NULL)
+    {
+        p->number = i;
+        i++;
+        p = p->next;
+    }
 }
 void cat_tac(Node_tac ** code_a, Node_tac ** code_b){
     if(*code_a==NULL){
         *code_a=*code_b;
+        printf("cruzou no cat_tac\n");
     }
     else if(*code_b!=NULL){
         Node_tac ** aux = code_a;
         while((*aux)->next!=NULL){
             (*aux)= (*aux)->next;
         }
+        (*code_b)->prev = (*aux);
         (*aux)->next = (*code_b);
 
-        (*code_b)->prev = (*aux);
+        
+        printf("cruzou no cat_tac\n");
     }
     
 }

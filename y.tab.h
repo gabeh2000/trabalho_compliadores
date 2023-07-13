@@ -97,9 +97,11 @@ extern int yydebug;
     GREAT = 303,
     STRING = 304,
     PRINT = 305,
-    IDF = 306,
-    INT_LIT = 307,
-    F_LIT = 308
+    TRUE_ = 306,
+    FALSE_ = 307,
+    IDF = 308,
+    INT_LIT = 309,
+    F_LIT = 310
   };
 #endif
 /* Tokens.  */
@@ -151,9 +153,11 @@ extern int yydebug;
 #define GREAT 303
 #define STRING 304
 #define PRINT 305
-#define IDF 306
-#define INT_LIT 307
-#define F_LIT 308
+#define TRUE_ 306
+#define FALSE_ 307
+#define IDF 308
+#define INT_LIT 309
+#define F_LIT 310
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -164,7 +168,7 @@ union YYSTYPE
 	char* cadeia;
 	struct _node * no;
 
-#line 168 "y.tab.h"
+#line 172 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

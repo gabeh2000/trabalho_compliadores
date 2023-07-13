@@ -83,6 +83,8 @@ class  { return(CLASS);}
 public { return(PUBLIC);}
 private { return(PRIVATE);}
 protected  { return(PROTECTED);}
+true  { return(TRUE_);}
+false  { return(FALSE_);}
 void    { return(VOID);}
 "NULL"    { return(NUL);}
 const    { return(CONST);}

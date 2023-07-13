@@ -243,9 +243,11 @@ extern int yydebug;
     GREAT = 303,
     STRING = 304,
     PRINT = 305,
-    IDF = 306,
-    INT_LIT = 307,
-    F_LIT = 308
+    TRUE_ = 306,
+    FALSE_ = 307,
+    IDF = 308,
+    INT_LIT = 309,
+    F_LIT = 310
   };
 #endif
 /* Tokens.  */
@@ -297,9 +299,11 @@ extern int yydebug;
 #define GREAT 303
 #define STRING 304
 #define PRINT 305
-#define IDF 306
-#define INT_LIT 307
-#define F_LIT 308
+#define TRUE_ 306
+#define FALSE_ 307
+#define IDF 308
+#define INT_LIT 309
+#define F_LIT 310
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -310,7 +314,7 @@ union YYSTYPE
 	char* cadeia;
 	struct _node * no;
 
-#line 314 "y.tab.c"
+#line 318 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -646,19 +650,19 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  26
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   105
+#define YYLAST   127
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  54
+#define YYNTOKENS  56
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  20
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  47
+#define YYNRULES  51
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  101
+#define YYNSTATES  107
 
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   308
+#define YYMAXUTOK   310
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -700,18 +704,20 @@ static const yytype_int8 yytranslate[] =
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
       35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
-      45,    46,    47,    48,    49,    50,    51,    52,    53
+      45,    46,    47,    48,    49,    50,    51,    52,    53,    54,
+      55
 };
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   179,   179,   186,   187,   193,   201,   216,   224,   232,
-     234,   236,   240,   241,   242,   243,   244,   245,   255,   263,
-     272,   280,   288,   294,   312,   317,   328,   369,   370,   372,
-     374,   377,   378,   386,   393,   399,   406,   408,   410,   412,
-     414,   416,   421,   424,   442,   457,   472,   487
+       0,   180,   180,   187,   188,   195,   203,   218,   228,   236,
+     238,   240,   244,   245,   246,   247,   248,   249,   260,   268,
+     277,   285,   309,   339,   357,   362,   374,   416,   419,   451,
+     463,   473,   482,   491,   493,   496,   497,   508,   515,   521,
+     528,   530,   532,   534,   536,   538,   543,   547,   565,   580,
+     595,   610
 };
 #endif
 
@@ -726,9 +732,9 @@ static const char *const yytname[] =
   "INT", "DOUBLE", "FLOAT", "CHAR", "QUOTE", "DQUOTE", "LE", "GE", "EQ",
   "NE", "IF", "THEN", "ELSE", "WHILE", "FOR", "CLASS", "PUBLIC", "PRIVATE",
   "PROTECTED", "VOID", "NUL", "CONST", "STATIC", "LESS", "GREAT", "STRING",
-  "PRINT", "IDF", "INT_LIT", "F_LIT", "$accept", "code", "comando",
-  "declaracoes", "declaracao", "tipo", "acoes", "for", "while", "if",
-  "ifelse", "print", "texto", "att", "expressao", "and_or", "expr",
+  "PRINT", "TRUE_", "FALSE_", "IDF", "INT_LIT", "F_LIT", "$accept", "code",
+  "comando", "declaracoes", "declaracao", "tipo", "acoes", "for", "while",
+  "if", "ifelse", "print", "texto", "att", "expressao", "and_or", "expr",
   "AUX_idf_val", "comparador", "calc", YY_NULLPTR
 };
 #endif
@@ -743,11 +749,11 @@ static const yytype_int16 yytoknum[] =
      275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
      285,   286,   287,   288,   289,   290,   291,   292,   293,   294,
      295,   296,   297,   298,   299,   300,   301,   302,   303,   304,
-     305,   306,   307,   308
+     305,   306,   307,   308,   309,   310
 };
 # endif
 
-#define YYPACT_NINF (-31)
+#define YYPACT_NINF (-21)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -761,17 +767,17 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      53,   -31,   -31,   -31,     5,     7,    16,    22,    29,    47,
-     -31,    53,    42,     3,    53,   -31,   -31,    30,   -31,   -31,
-     -31,    -1,    -1,   -17,    -6,    12,   -31,   -31,   -31,    29,
-     -31,   -31,    33,   -30,    12,   -31,   -31,   -31,    50,    -2,
-     -31,     9,    51,    56,    61,   -31,   -31,    54,    13,    53,
-     -31,    26,    59,   -31,   -31,    -1,    12,    12,    12,    12,
-     -31,   -31,   -31,   -31,   -31,   -31,    12,    60,    -1,    -1,
-      62,    55,   -31,    53,   -31,    19,    19,   -31,   -31,    13,
-      53,    72,    75,   -31,   -31,    65,    66,    41,    41,   -31,
-     -31,    73,    74,    76,    77,    53,    53,    78,    79,   -31,
-     -31
+      67,   -21,   -21,   -21,   -17,     8,    39,    40,    -6,    64,
+     -21,    67,    58,    18,    67,   -21,   -21,   -21,   -21,   -21,
+     -21,     1,     1,   -19,    13,   -15,   -21,   -21,   -21,    -6,
+     -21,   -21,     1,     1,   -21,   -21,   -21,   -21,   -21,    60,
+     -21,   -21,    15,    95,    59,    63,   -21,   -21,    55,   -15,
+     105,   -21,    99,    11,   -21,   -21,    54,     1,   -15,   -15,
+     -15,   -15,   -21,   -21,   -21,   -21,   -21,   -21,   -15,    57,
+       1,     1,    70,    92,   -21,   -21,    67,    25,    30,    30,
+     -21,   -21,   105,    67,    17,    19,   -21,    76,    77,    33,
+      33,    78,   -21,    93,    96,    68,   100,   101,    67,    67,
+      67,    98,   102,   103,   -21,   -21,   -21
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -782,28 +788,28 @@ static const yytype_int8 yydefact[] =
        3,     9,    10,    11,     0,     0,     0,     0,     0,     0,
        2,     3,     0,     0,     3,    12,    13,    14,    15,    16,
       17,     0,     0,     0,     0,     0,     1,     4,     6,     7,
-       8,     5,     0,     0,     0,    33,    34,    35,     0,    27,
-      42,     0,     0,     0,     0,    24,    25,     0,    26,     3,
-      32,     0,     0,    29,    30,     0,     0,     0,     0,     0,
-      41,    40,    38,    39,    37,    36,     0,     0,     0,     0,
-       0,     0,    47,     3,    28,    44,    43,    45,    46,    31,
-       3,     0,     0,    23,    22,     0,     0,     0,     0,    21,
-      20,     0,     0,     0,     0,     3,     3,     0,     0,    19,
-      18
+       8,     5,     0,     0,    31,    32,    37,    38,    39,     0,
+      27,    46,    35,     0,     0,     0,    24,    25,     0,     0,
+      26,    29,     0,    35,    33,    34,     0,     0,     0,     0,
+       0,     0,    45,    44,    42,    43,    41,    40,     0,     0,
+       0,     0,     0,     0,    30,    51,     3,    28,    48,    47,
+      49,    50,    36,     3,     0,     0,    23,     0,     0,     0,
+       0,    21,    20,     0,     0,     0,     0,     0,     3,     3,
+       3,     0,     0,     0,    22,    19,    18
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -31,   -31,   -11,   -31,    82,   -31,   -31,   -31,   -31,   -31,
-     -31,   -31,   -31,   -12,   -20,   -31,   -31,    63,   -31,     2
+     -21,   -21,   -11,   -21,   104,   -21,   -21,   -21,   -21,   -21,
+     -21,   -21,   -21,   -12,   -20,   -21,   -21,   -21,   -21,    24
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
       -1,     9,    10,    11,    12,    13,    14,    15,    16,    17,
-      18,    19,    47,    20,    38,    55,    39,    40,    66,    41
+      18,    19,    48,    20,    39,    57,    40,    41,    68,    42
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -811,59 +817,64 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      27,    30,    42,    31,    45,    53,    54,     1,    33,     2,
-       3,    44,    56,    57,    58,    59,    56,    57,    58,    59,
-      34,    35,    36,    37,    58,    59,    21,    48,    22,    56,
-      57,    58,    59,    34,     8,    74,    51,    23,    71,    60,
-      61,    62,    63,    24,    25,    46,    72,    26,    81,    82,
-      35,    36,    37,    28,    29,    49,    64,    65,    75,    76,
-      77,    78,    85,    35,    36,    37,    32,    68,    79,    86,
-      52,    67,    69,    83,    70,    91,    92,     1,    84,     2,
-       3,    73,    80,    87,    97,    98,    88,     4,    89,    90,
-       5,     6,     8,    93,    94,     0,    50,     0,    95,    96,
-       0,    99,   100,     7,     8,    43
+      27,    30,    43,    31,    21,     1,    49,     2,     3,    25,
+      32,    45,    51,    52,    58,    59,    60,    61,    58,    59,
+      60,    61,    33,    46,    54,    55,    54,    55,    89,    22,
+      90,    75,    54,    55,     8,    60,    61,    77,    36,    37,
+      38,    62,    63,    64,    65,    62,    63,    64,    65,    50,
+      84,    85,    34,    35,    36,    37,    38,    53,    66,    67,
+      23,    24,    66,    67,    26,    87,    47,    54,    55,    28,
+      70,    29,    88,    73,    71,    72,    76,    93,    94,    83,
+      56,    86,    78,    79,    80,    81,     8,   101,   102,   103,
+      98,     1,    82,     2,     3,    58,    59,    60,    61,    91,
+      92,     4,    54,    55,     5,     6,    54,    55,    58,    59,
+      60,    61,    75,    96,    95,    69,    97,     7,     0,    74,
+       8,   104,    99,   100,     0,   105,   106,    44
 };
 
 static const yytype_int8 yycheck[] =
 {
-      11,    13,    22,    14,    10,     7,     8,    24,     9,    26,
-      27,    23,     3,     4,     5,     6,     3,     4,     5,     6,
-      21,    51,    52,    53,     5,     6,    21,    25,    21,     3,
-       4,     5,     6,    21,    51,    55,    34,    21,    49,    30,
-      31,    32,    33,    21,    15,    51,    20,     0,    68,    69,
-      51,    52,    53,    11,    51,    22,    47,    48,    56,    57,
-      58,    59,    73,    51,    52,    53,    36,    11,    66,    80,
-      20,    20,    11,    11,    20,    87,    88,    24,    23,    26,
-      27,    22,    22,    11,    95,    96,    11,    34,    23,    23,
-      37,    38,    51,    20,    20,    -1,    33,    -1,    22,    22,
-      -1,    23,    23,    50,    51,    23
+      11,    13,    22,    14,    21,    24,    21,    26,    27,    15,
+       9,    23,    32,    33,     3,     4,     5,     6,     3,     4,
+       5,     6,    21,    10,     7,     8,     7,     8,    11,    21,
+      11,    20,     7,     8,    53,     5,     6,    57,    53,    54,
+      55,    30,    31,    32,    33,    30,    31,    32,    33,    25,
+      70,    71,    51,    52,    53,    54,    55,    33,    47,    48,
+      21,    21,    47,    48,     0,    76,    53,     7,     8,    11,
+      11,    53,    83,    49,    11,    20,    22,    89,    90,    22,
+      20,    11,    58,    59,    60,    61,    53,    98,    99,   100,
+      22,    24,    68,    26,    27,     3,     4,     5,     6,    23,
+      23,    34,     7,     8,    37,    38,     7,     8,     3,     4,
+       5,     6,    20,    20,    36,    20,    20,    50,    -1,    20,
+      53,    23,    22,    22,    -1,    23,    23,    23
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,    24,    26,    27,    34,    37,    38,    50,    51,    55,
-      56,    57,    58,    59,    60,    61,    62,    63,    64,    65,
-      67,    21,    21,    21,    21,    15,     0,    56,    11,    51,
-      67,    56,    36,     9,    21,    51,    52,    53,    68,    70,
-      71,    73,    68,    58,    67,    10,    51,    66,    73,    22,
-      71,    73,    20,     7,     8,    69,     3,     4,     5,     6,
-      30,    31,    32,    33,    47,    48,    72,    20,    11,    11,
-      20,    56,    20,    22,    68,    73,    73,    73,    73,    73,
-      22,    68,    68,    11,    23,    56,    56,    11,    11,    23,
-      23,    67,    67,    20,    20,    22,    22,    56,    56,    23,
-      23
+       0,    24,    26,    27,    34,    37,    38,    50,    53,    57,
+      58,    59,    60,    61,    62,    63,    64,    65,    66,    67,
+      69,    21,    21,    21,    21,    15,     0,    58,    11,    53,
+      69,    58,     9,    21,    51,    52,    53,    54,    55,    70,
+      72,    73,    75,    70,    60,    69,    10,    53,    68,    21,
+      75,    70,    70,    75,     7,     8,    20,    71,     3,     4,
+       5,     6,    30,    31,    32,    33,    47,    48,    74,    20,
+      11,    11,    20,    75,    20,    20,    22,    70,    75,    75,
+      75,    75,    75,    22,    70,    70,    11,    58,    58,    11,
+      11,    23,    23,    69,    69,    36,    20,    20,    22,    22,
+      22,    58,    58,    58,    23,    23,    23
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    54,    55,    56,    56,    56,    57,    58,    58,    59,
-      59,    59,    60,    60,    60,    60,    60,    60,    61,    61,
-      62,    63,    64,    65,    66,    66,    67,    68,    68,    69,
-      69,    70,    70,    71,    71,    71,    72,    72,    72,    72,
-      72,    72,    73,    73,    73,    73,    73,    73
+       0,    56,    57,    58,    58,    58,    59,    60,    60,    61,
+      61,    61,    62,    62,    62,    62,    62,    62,    63,    63,
+      64,    65,    66,    67,    68,    68,    69,    70,    70,    70,
+      70,    70,    70,    71,    71,    72,    72,    73,    73,    73,
+      74,    74,    74,    74,    74,    74,    75,    75,    75,    75,
+      75,    75
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -871,9 +882,10 @@ static const yytype_int8 yyr2[] =
 {
        0,     2,     1,     0,     2,     2,     2,     2,     2,     1,
        1,     1,     1,     1,     1,     1,     1,     1,    11,    11,
-       7,     7,     5,     5,     1,     1,     3,     1,     3,     1,
-       1,     3,     2,     1,     1,     1,     1,     1,     1,     1,
-       1,     1,     1,     3,     3,     3,     3,     3
+       7,     7,    11,     5,     1,     1,     3,     1,     3,     2,
+       3,     1,     1,     1,     1,     1,     3,     1,     1,     1,
+       1,     1,     1,     1,     1,     1,     1,     3,     3,     3,
+       3,     3
 };
 
 
@@ -1664,152 +1676,156 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 179 "nico.y"
+#line 180 "nico.y"
              { (yyval.no) = create_node((yylsp[0]).first_line, 0, "Root", (yyvsp[0].no), NULL); syntax_tree = (yyval.no); cat_tac(&((yyval.no)->code),  &((yyvsp[0].no)->code)); 
-		char *t = malloc(sizeof(char)*12);
+		/*char *t = malloc(sizeof(char)*12);
 		sprintf(t, "lista%d.txt", file_num++);
 		FILE* file = fopen(t, "w");
-    	print_tac(file, (yyval.no)->code);
+    	print_tac(file, $$->code);*/
 }
-#line 1675 "y.tab.c"
+#line 1687 "y.tab.c"
     break;
 
   case 3:
-#line 186 "nico.y"
+#line 187 "nico.y"
                                        { (yyval.no) = create_node(1, 0, "Vazio", NULL); }
-#line 1681 "y.tab.c"
+#line 1693 "y.tab.c"
     break;
 
   case 4:
-#line 187 "nico.y"
+#line 188 "nico.y"
                      { (yyval.no) = create_node((yylsp[-1]).first_line, code_node, NULL, (yyvsp[-1].no), (yyvsp[0].no), NULL);  
-cat_tac(&((yyval.no)->code),  &((yyvsp[-1].no)->code)); cat_tac(&((yyval.no)->code),  &((yyvsp[0].no)->code));
-		char *t = malloc(sizeof(char)*12);
+	cat_tac(&((yyval.no)->code),  &((yyvsp[-1].no)->code)); cat_tac(&((yyval.no)->code),  &((yyvsp[0].no)->code));
+		/*char *t = malloc(sizeof(char)*12);
 		sprintf(t, "lista%d.txt", file_num++);
 		FILE* file = fopen(t, "w");
-    	print_tac(file, (yyval.no)->code);}
-#line 1692 "y.tab.c"
+    	print_tac(file, $$->code);*/
+		}
+#line 1705 "y.tab.c"
     break;
 
   case 5:
-#line 193 "nico.y"
+#line 195 "nico.y"
                { (yyval.no) = create_node((yylsp[-1]).first_line, code_node, NULL, (yyvsp[-1].no),(yyvsp[0].no), NULL); 
-cat_tac(&((yyval.no)->code),  &((yyvsp[-1].no)->code));cat_tac(&((yyval.no)->code),  &((yyvsp[0].no)->code)); 
-		char *t = malloc(sizeof(char)*12);
+	cat_tac(&((yyval.no)->code),  &((yyvsp[-1].no)->code));cat_tac(&((yyval.no)->code),  &((yyvsp[0].no)->code)); 
+		/*char *t = malloc(sizeof(char)*12);
 		sprintf(t, "lista%d.txt", file_num++);
 		FILE* file = fopen(t, "w");
-    	print_tac(file, (yyval.no)->code);
+    	print_tac(file, $$->code);*/
 }
-#line 1704 "y.tab.c"
+#line 1717 "y.tab.c"
     break;
 
   case 6:
-#line 201 "nico.y"
+#line 203 "nico.y"
                                   { 
 	Node *no_SEMICOLON = create_node((yylsp[-1]).first_line, pontoevirgula_node,  (yyvsp[0].cadeia), NULL);
 
 	(yyval.no) = create_node((yylsp[-1]).first_line, declaracoes_node, NULL, (yyvsp[-1].no), no_SEMICOLON, NULL);
 	cat_tac(&((yyval.no)->code),  &((yyvsp[-1].no)->code));
 	
-		char *t = malloc(sizeof(char)*12);
+		/*char *t = malloc(sizeof(char)*12);
 		sprintf(t, "lista%d.txt", file_num++);
 		FILE* file = fopen(t, "w");
-    	print_tac(file, (yyval.no)->code);
+    	print_tac(file, $$->code);*/
 	
 	}
-#line 1721 "y.tab.c"
-    break;
-
-  case 7:
-#line 216 "nico.y"
-                     { Node *no_IDF = create_node((yylsp[-1]).first_line, declaracao_node, (yyvsp[0].cadeia), NULL);
-(yyval.no) = create_node((yylsp[-1]).first_line, declaracao_node, NULL, (yyvsp[-1].no), no_IDF, NULL);
- atrib((yyvsp[0].cadeia));cat_tac(&((yyval.no)->code),  &((yyvsp[-1].no)->code));
- 		char *t = malloc(sizeof(char)*12);
-		sprintf(t, "lista%d.txt", file_num++);
-		FILE* file = fopen(t, "w");
-    	print_tac(file, (yyval.no)->code);
- }
 #line 1734 "y.tab.c"
     break;
 
-  case 8:
-#line 224 "nico.y"
-           {(yyval.no) = create_node((yylsp[-1]).first_line, declaracao_node, NULL, (yyvsp[-1].no), (yyvsp[0].no), NULL); cat_tac(&((yyval.no)->code),  &((yyvsp[0].no)->code));
-
-		char *t = malloc(sizeof(char)*12);
+  case 7:
+#line 218 "nico.y"
+                     { Node *no_IDF = create_node((yylsp[-1]).first_line, declaracao_node, (yyvsp[0].cadeia), NULL);
+(yyval.no) = create_node((yylsp[-1]).first_line, declaracao_node, NULL, (yyvsp[-1].no), no_IDF, NULL);
+ 		atrib((yyvsp[0].cadeia));
+		Tac* tac_vazio = create_inst_tac("","","","");
+		append_inst_tac(&((yyval.no)->code),tac_vazio);
+ 		/*char *t = malloc(sizeof(char)*12);
 		sprintf(t, "lista%d.txt", file_num++);
 		FILE* file = fopen(t, "w");
-    	print_tac(file, (yyval.no)->code);
+    	print_tac(file, $$->code);*/
+ }
+#line 1749 "y.tab.c"
+    break;
+
+  case 8:
+#line 228 "nico.y"
+           {(yyval.no) = create_node((yylsp[-1]).first_line, declaracao_node, NULL, (yyvsp[-1].no), (yyvsp[0].no), NULL); cat_tac(&((yyval.no)->code),  &((yyvsp[0].no)->code));
+
+		/*char *t = malloc(sizeof(char)*12);
+		sprintf(t, "lista%d.txt", file_num++);
+		FILE* file = fopen(t, "w");
+    	print_tac(file, $$->code);*/
 }
-#line 1746 "y.tab.c"
+#line 1761 "y.tab.c"
     break;
 
   case 9:
-#line 232 "nico.y"
+#line 236 "nico.y"
           {
 	(yyval.no) = create_node((yylsp[0]).first_line, int_node, (yyvsp[0].cadeia), NULL); v_size=INT_SIZE; }
-#line 1753 "y.tab.c"
+#line 1768 "y.tab.c"
     break;
 
   case 10:
-#line 234 "nico.y"
+#line 238 "nico.y"
         {
 	(yyval.no) = create_node((yylsp[0]).first_line, float_node, (yyvsp[0].cadeia), NULL);v_size=FLOAT_SIZE;}
-#line 1760 "y.tab.c"
+#line 1775 "y.tab.c"
     break;
 
   case 11:
-#line 236 "nico.y"
+#line 240 "nico.y"
        {
 	(yyval.no) = create_node((yylsp[0]).first_line, char_node, (yyvsp[0].cadeia), NULL);v_size=CHAR_SIZE;}
-#line 1767 "y.tab.c"
+#line 1782 "y.tab.c"
     break;
 
   case 12:
-#line 240 "nico.y"
+#line 244 "nico.y"
            {(yyval.no) = create_node((yylsp[0]).first_line, for_node, NULL, (yyvsp[0].no), NULL);}
-#line 1773 "y.tab.c"
+#line 1788 "y.tab.c"
     break;
 
   case 13:
-#line 241 "nico.y"
+#line 245 "nico.y"
         {(yyval.no) = create_node((yylsp[0]).first_line, while_node, NULL, (yyvsp[0].no), NULL);}
-#line 1779 "y.tab.c"
+#line 1794 "y.tab.c"
     break;
 
   case 14:
-#line 242 "nico.y"
+#line 246 "nico.y"
      {(yyval.no) = create_node((yylsp[0]).first_line, if_node, NULL, (yyvsp[0].no), NULL);}
-#line 1785 "y.tab.c"
+#line 1800 "y.tab.c"
     break;
 
   case 15:
-#line 243 "nico.y"
+#line 247 "nico.y"
          {(yyval.no) = create_node((yylsp[0]).first_line, else_node, NULL, (yyvsp[0].no), NULL);}
-#line 1791 "y.tab.c"
+#line 1806 "y.tab.c"
     break;
 
   case 16:
-#line 244 "nico.y"
+#line 248 "nico.y"
         {(yyval.no) = create_node((yylsp[0]).first_line, print_node, NULL, (yyvsp[0].no), NULL);cat_tac(&((yyval.no)->code),  &((yyvsp[0].no)->code));}
-#line 1797 "y.tab.c"
+#line 1812 "y.tab.c"
     break;
 
   case 17:
-#line 245 "nico.y"
+#line 249 "nico.y"
       {(yyval.no) = create_node((yylsp[0]).first_line, atribuicao_node, NULL, (yyvsp[0].no), NULL); cat_tac(&((yyval.no)->code),  &((yyvsp[0].no)->code));
-		char *t = malloc(sizeof(char)*12);
+		//printa uma lista de tac pra cada operação aritmética
+		/*char *t = malloc(sizeof(char)*12);
 		sprintf(t, "lista%d.txt", file_num++);
 		FILE* file = fopen(t, "w");
-    	print_tac(file, (yyval.no)->code);
-
+    	print_tac(file, $$->code);
+		fclose(file);*/
 }
-#line 1809 "y.tab.c"
+#line 1825 "y.tab.c"
     break;
 
   case 18:
-#line 255 "nico.y"
+#line 260 "nico.y"
                                                                                    {
 	Node *no_FOR = create_node((yylsp[-10]).first_line, forlex_node, (yyvsp[-10].cadeia), NULL);
 	Node *no_PAROPN = create_node((yylsp[-10]).first_line, abrepar_node,  (yyvsp[-9].cadeia), NULL);
@@ -1818,11 +1834,11 @@ cat_tac(&((yyval.no)->code),  &((yyvsp[-1].no)->code));cat_tac(&((yyval.no)->cod
 	Node *no_KOPN = create_node((yylsp[-10]).first_line, abrechaves_node,  (yyvsp[-2].cadeia), NULL);
 	Node *no_KCLOSE = create_node((yylsp[-10]).first_line, fechachaves_node, (yyvsp[0].cadeia), NULL);
 	(yyval.no) = create_node((yylsp[-10]).first_line, forlex_node, NULL, no_FOR, no_PAROPN, (yyvsp[-8].no), no_SEMICOLON,(yyvsp[-6].no), no_SEMICOLON, (yyvsp[-4].no), no_PARCLOSE, no_KOPN, (yyvsp[-1].no), no_KCLOSE, NULL);}
-#line 1822 "y.tab.c"
+#line 1838 "y.tab.c"
     break;
 
   case 19:
-#line 263 "nico.y"
+#line 268 "nico.y"
                                                                                        {
 	Node *no_FOR = create_node((yylsp[-10]).first_line, forlex_node, (yyvsp[-10].cadeia), NULL);
 	Node *no_PAROPN = create_node((yylsp[-10]).first_line, abrepar_node,  (yyvsp[-9].cadeia), NULL);
@@ -1831,11 +1847,11 @@ cat_tac(&((yyval.no)->code),  &((yyvsp[-1].no)->code));cat_tac(&((yyval.no)->cod
 	Node *no_KOPN = create_node((yylsp[-10]).first_line, abrechaves_node,  (yyvsp[-2].cadeia), NULL);
 	Node *no_KCLOSE = create_node((yylsp[-10]).first_line, fechachaves_node, (yyvsp[0].cadeia), NULL);
 	(yyval.no) = create_node((yylsp[-10]).first_line, forlex_node, NULL, no_FOR, no_PAROPN, (yyvsp[-8].no), no_SEMICOLON,(yyvsp[-6].no), no_SEMICOLON, (yyvsp[-4].no), no_PARCLOSE, no_KOPN, (yyvsp[-1].no), no_KCLOSE, NULL);}
-#line 1835 "y.tab.c"
+#line 1851 "y.tab.c"
     break;
 
   case 20:
-#line 272 "nico.y"
+#line 277 "nico.y"
                                                            {
 	Node *no_WHILE = create_node((yylsp[-6]).first_line, whilelex_node, (yyvsp[-6].cadeia), NULL);
 	Node *no_PAROPN = create_node((yylsp[-6]).first_line, abrepar_node,  (yyvsp[-5].cadeia), NULL);
@@ -1843,33 +1859,73 @@ cat_tac(&((yyval.no)->code),  &((yyvsp[-1].no)->code));cat_tac(&((yyval.no)->cod
 	Node *no_KOPN = create_node((yylsp[-6]).first_line, abrechaves_node,  (yyvsp[-2].cadeia), NULL);
 	Node *no_KCLOSE = create_node((yylsp[-6]).first_line, fechachaves_node, (yyvsp[0].cadeia), NULL);
 	(yyval.no) = create_node((yylsp[-6]).first_line, whilelex_node, NULL, no_WHILE, no_PAROPN, (yyvsp[-4].no), no_PARCLOSE, no_KOPN,(yyvsp[-1].no), no_KCLOSE, NULL);}
-#line 1847 "y.tab.c"
+#line 1863 "y.tab.c"
     break;
 
   case 21:
-#line 280 "nico.y"
+#line 285 "nico.y"
                                                      {
 	Node *no_IF = create_node((yylsp[-6]).first_line, iflex_node, (yyvsp[-6].cadeia), NULL);
 	Node *no_PAROPN = create_node((yylsp[-6]).first_line, abrepar_node,  (yyvsp[-5].cadeia), NULL);
 	Node *no_PARCLOSE = create_node((yylsp[-6]).first_line, fechapar_node,  (yyvsp[-3].cadeia), NULL);
 	Node *no_KOPN = create_node((yylsp[-6]).first_line, abrechaves_node,  (yyvsp[-2].cadeia), NULL);
 	Node *no_KCLOSE = create_node((yylsp[-6]).first_line, fechachaves_node, (yyvsp[0].cadeia), NULL);
-	(yyval.no) = create_node((yylsp[-6]).first_line, iflex_node, NULL, no_IF, no_PAROPN, (yyvsp[-4].no), no_PARCLOSE,no_KOPN,(yyvsp[-1].no),no_KCLOSE, NULL);}
-#line 1859 "y.tab.c"
+	(yyval.no) = create_node((yylsp[-6]).first_line, iflex_node, NULL, no_IF, no_PAROPN, (yyvsp[-4].no), no_PARCLOSE,no_KOPN,(yyvsp[-1].no),no_KCLOSE, NULL);
+
+	(yyvsp[-4].no)->t = strdup("novo_rot");
+	(yyvsp[-4].no)->f = strdup((yyval.no)->f);
+
+	(yyvsp[-1].no)->f= strdup((yyval.no)->f);
+
+	Tac* new_true= create_inst_tac((yyvsp[-4].no)->t,"",":","");
+	Tac* new_false = create_inst_tac((yyval.no)->f,"",":","");
+
+	append_inst_tac(&((yyvsp[-1].no)->code),new_false);
+	append_inst_tac(&((yyvsp[-4].no)->code),new_true);
+
+	cat_tac(&((yyvsp[-4].no)->code),&((yyvsp[-1].no)->code));
+	cat_tac(&((yyval.no)->code),&((yyvsp[-4].no)->code));
+	
+	}
+#line 1891 "y.tab.c"
     break;
 
   case 22:
-#line 288 "nico.y"
-                                    {
-	Node *no_ELSE = create_node((yylsp[-4]).first_line, elselex_node, (yyvsp[-3].cadeia), NULL);
-	Node *no_KOPN = create_node((yylsp[-4]).first_line, abrechaves_node,  (yyvsp[-2].cadeia), NULL);
-	Node *no_KCLOSE = create_node((yylsp[-4]).first_line, fechachaves_node, (yyvsp[0].cadeia), NULL);
-	(yyval.no) = create_node((yylsp[-4]).first_line, elselex_node, NULL, (yyvsp[-4].no), no_ELSE, no_KOPN, (yyvsp[-1].no),no_KCLOSE, NULL); }
-#line 1869 "y.tab.c"
+#line 309 "nico.y"
+                                                                                  {
+	Node *no_IF = create_node((yylsp[-10]).first_line, iflex_node, (yyvsp[-10].cadeia), NULL);
+	Node *no_ELSE = create_node((yylsp[-10]).first_line, elselex_node, (yyvsp[-3].cadeia), NULL);
+	Node *no_KOPN = create_node((yylsp[-10]).first_line, abrechaves_node,  (yyvsp[-6].cadeia), NULL);
+	Node *no_KCLOSE = create_node((yylsp[-10]).first_line, fechachaves_node, (yyvsp[-4].cadeia), NULL);
+	Node *no_PAROPN = create_node((yylsp[-10]).first_line, abrepar_node,  (yyvsp[-9].cadeia), NULL);
+	Node *no_PARCLOSE = create_node((yylsp[-10]).first_line, fechapar_node,  (yyvsp[-7].cadeia), NULL);
+	(yyval.no) = create_node((yylsp[-10]).first_line, elselex_node, NULL, no_IF, no_PAROPN, (yyvsp[-8].no), no_PARCLOSE,no_KOPN,(yyvsp[-5].no),no_KCLOSE,no_ELSE, no_KOPN, (yyvsp[-1].no),no_KCLOSE, NULL); 
+	(yyvsp[-8].no)->t = strdup("novo_rot");
+	(yyvsp[-8].no)->f = strdup("novo_rot");
+
+	(yyvsp[-5].no)->f = strdup((yyval.no)->f);
+	(yyvsp[-1].no)->f = strdup((yyval.no)->f);
+
+	Tac* new_true= create_inst_tac((yyvsp[-8].no)->t,"",":","");
+	Tac* new_goto= create_inst_tac("","","goto",(yyval.no)->f);
+	Tac* new_false= create_inst_tac((yyvsp[-8].no)->f,"",":","");
+	Tac* new_next= create_inst_tac((yyval.no)->f,"",":","");
+
+	append_inst_tac(&((yyvsp[-1].no)->code), new_next);
+	append_inst_tac(&((yyvsp[-5].no)->code), new_goto);
+	append_inst_tac(&((yyvsp[-5].no)->code), new_false);
+	append_inst_tac(&((yyvsp[-8].no)->code), new_true);
+
+	cat_tac(&((yyvsp[-5].no)->code),&((yyvsp[-1].no)->code));
+	cat_tac(&((yyvsp[-8].no)->code),&((yyvsp[-5].no)->code));
+	cat_tac(&((yyval.no)->code),&((yyvsp[-8].no)->code));
+
+	}
+#line 1925 "y.tab.c"
     break;
 
   case 23:
-#line 294 "nico.y"
+#line 339 "nico.y"
                                              {
 	
 	Node *no_PRINT = create_node((yylsp[-4]).first_line, print_lex_node, (yyvsp[-4].cadeia), NULL);
@@ -1887,31 +1943,32 @@ cat_tac(&((yyval.no)->code),  &((yyvsp[-1].no)->code));cat_tac(&((yyval.no)->cod
  	append_inst_tac(&((yyval.no)->code),new_tac);
 
 	}
-#line 1891 "y.tab.c"
+#line 1947 "y.tab.c"
     break;
 
   case 24:
-#line 312 "nico.y"
+#line 357 "nico.y"
            {(yyval.no) = create_node((yylsp[0]).first_line, text_lex_node, (yyvsp[0].cadeia), NULL); 
 	Tac* tac_vazio = create_inst_tac("","","","");
 	t_size_now = CHAR_SIZE;
 	append_inst_tac(&((yyval.no)->code),tac_vazio);}
-#line 1900 "y.tab.c"
+#line 1956 "y.tab.c"
     break;
 
   case 25:
-#line 317 "nico.y"
+#line 362 "nico.y"
    {
 	(yyval.no) = create_node((yylsp[0]).first_line, idf_node, (yyvsp[0].cadeia), NULL); 
 	Tac* tac_vazio = create_inst_tac("","","","");
 	entry_t* aux = lookup(symbol_table,(yyvsp[0].cadeia));
 	t_size_now = aux->size;
-	append_inst_tac(&((yyval.no)->code),tac_vazio);}
-#line 1911 "y.tab.c"
+	append_inst_tac(&((yyval.no)->code),tac_vazio);
+}
+#line 1968 "y.tab.c"
     break;
 
   case 26:
-#line 328 "nico.y"
+#line 374 "nico.y"
                     {
 	Node *no_IDF = create_node((yylsp[-2]).first_line, idf_node, (yyvsp[-2].cadeia), NULL);
 	Node *no_ATRIB = create_node((yylsp[-2]).first_line, atribuicao_node,  (yyvsp[-1].cadeia), NULL);
@@ -1947,55 +2004,154 @@ cat_tac(&((yyval.no)->code),  &((yyvsp[-1].no)->code));cat_tac(&((yyval.no)->cod
  	append_inst_tac(&((yyval.no)->code),new_tac);
 	t_size = 0;
 
-	char *t = malloc(sizeof(char)*12);
+	/*char *t = malloc(sizeof(char)*12);
 		sprintf(t, "lista%d.txt", file_num++);
 		FILE* file = fopen(t, "w");
-    	print_tac(file, (yyval.no)->code);
-	}
-#line 1956 "y.tab.c"
+    	print_tac(file, $$->code);*/
+}
+#line 2013 "y.tab.c"
     break;
 
   case 27:
-#line 369 "nico.y"
-                {(yyval.no) = create_node((yylsp[0]).first_line, expr_node, NULL, (yyvsp[0].no), NULL);}
-#line 1962 "y.tab.c"
+#line 416 "nico.y"
+                {(yyval.no) = create_node((yylsp[0]).first_line, expr_node, NULL, (yyvsp[0].no), NULL);
+				cat_tac(&((yyval.no)->code), &((yyvsp[0].no)->code));
+}
+#line 2021 "y.tab.c"
     break;
 
   case 28:
-#line 370 "nico.y"
-                        {(yyval.no) = create_node((yylsp[-2]).first_line, expr_node, NULL, (yyvsp[-2].no), (yyvsp[-1].no), (yyvsp[0].no), NULL);}
-#line 1968 "y.tab.c"
+#line 419 "nico.y"
+                             {(yyval.no) = create_node((yylsp[-2]).first_line, expr_node, NULL, (yyvsp[-2].no), (yyvsp[-1].no), (yyvsp[0].no), NULL);
+
+	if(strcmp((yyvsp[-1].no)->lexeme,"or")==0){
+		(yyvsp[-2].no)->t=strdup((yyval.no)->t);
+		//↓ esse a gente vai ter que colocar algo descente dps
+		(yyvsp[-2].no)->f = strdup("novo_rot");
+
+		(yyvsp[0].no)->t=strdup((yyval.no)->t);
+		(yyvsp[0].no)->f=strdup((yyvsp[-2].no)->f);
+
+		Tac* new_tac_lab = create_inst_tac("","","goto",(yyvsp[-2].no)->f);
+		/*Tac* new_tac = create_inst_tac($$->lexeme,$1->lexeme,$2->lexeme,$3->lexeme);
+		t_size_now = CHAR_SIZE;
+		t_size+=t_size_now;*/
+		
+		append_inst_tac(&((yyvsp[-2].no)->code),new_tac_lab);
+		cat_tac( &((yyvsp[-2].no)->code),&((yyvsp[0].no)->code) );
+		cat_tac( &((yyval.no)->code),&((yyvsp[-2].no)->code) );
+		//append_inst_tac(&($$->code),new_tac);
+	}
+	else{
+		(yyvsp[-2].no)->f=strdup((yyval.no)->f);
+		//↓ esse a gente vai ter que colocar algo descente dps
+		(yyvsp[-2].no)->f = strdup("novo_rot");
+		
+		Tac* new_tac_lab = create_inst_tac("","","goto",(yyvsp[-2].no)->t);
+		append_inst_tac(&((yyvsp[-2].no)->code),new_tac_lab);
+		cat_tac( &((yyvsp[-2].no)->code),&((yyvsp[0].no)->code) );
+		cat_tac( &((yyval.no)->code),&((yyvsp[-2].no)->code) );
+	}
+
+}
+#line 2058 "y.tab.c"
     break;
 
   case 29:
-#line 372 "nico.y"
-            {
-(yyval.no) = create_node((yylsp[0]).first_line, and_node, (yyvsp[0].cadeia), NULL);}
-#line 1975 "y.tab.c"
+#line 451 "nico.y"
+               {
+	Node* no_NOT = create_node((yylsp[-1]).first_line, idf_node, (yyvsp[-1].cadeia), NULL);
+	(yyval.no) = create_node((yylsp[-1]).first_line, expr_node, NULL, no_NOT,(yyvsp[0].no), NULL);
+	(yyvsp[0].no)->t=strdup((yyval.no)->f);
+	(yyvsp[0].no)->f=strdup((yyval.no)->t);
+	cat_tac( &((yyval.no)->code),&((yyvsp[0].no)->code) );
+	/*cat_tac( &($$->code),&($2->code) );
+	Tac* new_tac = create_inst_tac($$->lexeme,$2->lexeme,"not","");
+	t_size_now = CHAR_SIZE;
+	t_size+=t_size_now;
+	append_inst_tac(&($$->code), new_tac);*/
+}
+#line 2075 "y.tab.c"
     break;
 
   case 30:
-#line 374 "nico.y"
-     {
-	(yyval.no) = create_node((yylsp[0]).first_line, or_node, (yyvsp[0].cadeia), NULL);}
-#line 1982 "y.tab.c"
+#line 463 "nico.y"
+                            { Node *no_PAROPN = create_node((yylsp[-2]).first_line, abrepar_node,  (yyvsp[-2].cadeia), NULL);
+	Node *no_PARCLOSE = create_node((yylsp[-2]).first_line, fechapar_node,  (yyvsp[0].cadeia), NULL);
+	(yyval.no) = create_node((yylsp[-2]).first_line, expr_node, NULL, no_PAROPN, (yyvsp[-1].no), no_PARCLOSE, NULL);
+	
+	(yyval.no)->t= strdup((yyvsp[-1].no)->t);
+	(yyval.no)->f= strdup((yyvsp[-1].no)->f);
+
+	cat_tac( &((yyval.no)->code),&((yyvsp[-1].no)->code) );
+
+}
+#line 2090 "y.tab.c"
     break;
 
   case 31:
-#line 377 "nico.y"
-                           {(yyval.no) = create_node((yylsp[-2]).first_line, aux_node, NULL, (yyvsp[-2].no), (yyvsp[-1].no), (yyvsp[0].no), NULL);}
-#line 1988 "y.tab.c"
+#line 473 "nico.y"
+       {(yyval.no) = create_node((yylsp[0]).first_line, lvalue_node, NULL, NULL);
+
+	Tac* tac_vazio = create_inst_tac("","","goto",(yyval.no)->t);
+	append_inst_tac(&((yyval.no)->code),tac_vazio);
+	/*Tac* tac_vazio = create_inst_tac($$->lexeme,"1","","");
+	t_size_now = CHAR_SIZE;
+	t_size+=t_size_now;
+	append_inst_tac(&($$->code),tac_vazio);*/
+}
+#line 2104 "y.tab.c"
     break;
 
   case 32:
-#line 378 "nico.y"
-                  {Node *no_NOT = create_node((yylsp[-1]).first_line, notlex_node, (yyvsp[-1].cadeia), NULL);
-(yyval.no) = create_node((yylsp[-1]).first_line, iflex_node, NULL, no_NOT, (yyvsp[0].no), NULL);}
-#line 1995 "y.tab.c"
+#line 482 "nico.y"
+        {(yyval.no) = create_node((yylsp[0]).first_line, lvalue_node, rx(t_size), NULL);
+	Tac* tac_vazio = create_inst_tac("","","goto",(yyval.no)->f);
+	append_inst_tac(&((yyval.no)->code),tac_vazio);
+	/*Tac* tac_vazio = create_inst_tac($$->lexeme,"0","","");
+	t_size_now = CHAR_SIZE;
+	t_size+=t_size_now;
+	append_inst_tac(&($$->code),tac_vazio);*/
+}
+#line 2117 "y.tab.c"
     break;
 
   case 33:
-#line 386 "nico.y"
+#line 491 "nico.y"
+            {
+(yyval.no) = create_node((yylsp[0]).first_line, and_node, (yyvsp[0].cadeia), NULL);}
+#line 2124 "y.tab.c"
+    break;
+
+  case 34:
+#line 493 "nico.y"
+     {
+	(yyval.no) = create_node((yylsp[0]).first_line, or_node, (yyvsp[0].cadeia), NULL);}
+#line 2131 "y.tab.c"
+    break;
+
+  case 35:
+#line 496 "nico.y"
+         {(yyval.no) = create_node((yylsp[0]).first_line, aux_node, NULL, (yyvsp[0].no), NULL);}
+#line 2137 "y.tab.c"
+    break;
+
+  case 36:
+#line 497 "nico.y"
+                       {(yyval.no) = create_node((yylsp[-2]).first_line, aux_node, NULL, (yyvsp[-2].no), (yyvsp[-1].no), (yyvsp[0].no), NULL);
+	Tac* tac_true = create_inst_tac((yyval.no)->t,(yyvsp[-2].no)->lexeme,(yyvsp[-1].no)->lexeme,(yyvsp[0].no)->lexeme);
+	Tac* tac_false = create_inst_tac("","","goto",(yyval.no)->f);
+	append_inst_tac(&((yyvsp[-1].no)->code),tac_true);
+	append_inst_tac(&((yyvsp[-1].no)->code),tac_false);
+	cat_tac( &((yyvsp[-2].no)->code),&((yyvsp[-1].no)->code) );
+	cat_tac( &((yyval.no)->code),&((yyvsp[-2].no)->code) );
+
+}
+#line 2151 "y.tab.c"
+    break;
+
+  case 37:
+#line 508 "nico.y"
                  {
 	(yyval.no) = create_node((yylsp[0]).first_line, idf_node, (yyvsp[0].cadeia), NULL); 
 	Tac* tac_vazio = create_inst_tac("","","","");
@@ -2003,82 +2159,83 @@ cat_tac(&((yyval.no)->code),  &((yyvsp[-1].no)->code));cat_tac(&((yyval.no)->cod
 	t_size_now = aux->size;
 	append_inst_tac(&((yyval.no)->code),tac_vazio);
 	}
-#line 2007 "y.tab.c"
+#line 2163 "y.tab.c"
     break;
 
-  case 34:
-#line 393 "nico.y"
+  case 38:
+#line 515 "nico.y"
           {
 	(yyval.no) = create_node((yylsp[0]).first_line, lvalue_node, (yyvsp[0].cadeia), NULL);
 	Tac* tac_vazio = create_inst_tac("","","","");
 	t_size_now = INT_SIZE;
 
 	append_inst_tac(&((yyval.no)->code),tac_vazio);	}
-#line 2018 "y.tab.c"
+#line 2174 "y.tab.c"
     break;
 
-  case 35:
-#line 399 "nico.y"
+  case 39:
+#line 521 "nico.y"
         {
 	(yyval.no) = create_node((yylsp[0]).first_line, lvalue_node, (yyvsp[0].cadeia), NULL);
 	Tac* tac_vazio = create_inst_tac("","","","");
 	t_size_now = FLOAT_SIZE;
 	append_inst_tac(&((yyval.no)->code),tac_vazio);	}
-#line 2028 "y.tab.c"
-    break;
-
-  case 36:
-#line 406 "nico.y"
-                  {
-	(yyval.no) = create_node((yylsp[0]).first_line, maior_node, (yyvsp[0].cadeia), NULL);}
-#line 2035 "y.tab.c"
-    break;
-
-  case 37:
-#line 408 "nico.y"
-        {
-	(yyval.no) = create_node((yylsp[0]).first_line, menor_node, (yyvsp[0].cadeia),NULL);}
-#line 2042 "y.tab.c"
-    break;
-
-  case 38:
-#line 410 "nico.y"
-     {
-	(yyval.no) = create_node((yylsp[0]).first_line, igual_node, (yyvsp[0].cadeia), NULL);}
-#line 2049 "y.tab.c"
-    break;
-
-  case 39:
-#line 412 "nico.y"
-     {
-	(yyval.no) = create_node((yylsp[0]).first_line, diferente_node, (yyvsp[0].cadeia), NULL);}
-#line 2056 "y.tab.c"
+#line 2184 "y.tab.c"
     break;
 
   case 40:
-#line 414 "nico.y"
-     {
-	(yyval.no) = create_node((yylsp[0]).first_line, maiorigual_node, (yyvsp[0].cadeia), NULL);}
-#line 2063 "y.tab.c"
+#line 528 "nico.y"
+                  {
+	(yyval.no) = create_node((yylsp[0]).first_line, maior_node, (yyvsp[0].cadeia), NULL);}
+#line 2191 "y.tab.c"
     break;
 
   case 41:
-#line 416 "nico.y"
-     {
-	(yyval.no) = create_node((yylsp[0]).first_line, menorigual_node, (yyvsp[0].cadeia), NULL);}
-#line 2070 "y.tab.c"
+#line 530 "nico.y"
+        {
+	(yyval.no) = create_node((yylsp[0]).first_line, menor_node, (yyvsp[0].cadeia),NULL);}
+#line 2198 "y.tab.c"
     break;
 
   case 42:
-#line 421 "nico.y"
-            {(yyval.no) = create_node((yylsp[0]).first_line, lvalue_node, (yyvsp[0].no)->lexeme, (yyvsp[0].no), NULL);
-	cat_tac(&((yyval.no)->code),&((yyvsp[0].no)->code));
-}
-#line 2078 "y.tab.c"
+#line 532 "nico.y"
+     {
+	(yyval.no) = create_node((yylsp[0]).first_line, igual_node, (yyvsp[0].cadeia), NULL);}
+#line 2205 "y.tab.c"
     break;
 
   case 43:
-#line 424 "nico.y"
+#line 534 "nico.y"
+     {
+	(yyval.no) = create_node((yylsp[0]).first_line, diferente_node, (yyvsp[0].cadeia), NULL);}
+#line 2212 "y.tab.c"
+    break;
+
+  case 44:
+#line 536 "nico.y"
+     {
+	(yyval.no) = create_node((yylsp[0]).first_line, maiorigual_node, (yyvsp[0].cadeia), NULL);}
+#line 2219 "y.tab.c"
+    break;
+
+  case 45:
+#line 538 "nico.y"
+     {
+	(yyval.no) = create_node((yylsp[0]).first_line, menorigual_node, (yyvsp[0].cadeia), NULL);}
+#line 2226 "y.tab.c"
+    break;
+
+  case 46:
+#line 543 "nico.y"
+            {(yyval.no) = create_node((yylsp[0]).first_line, lvalue_node, NULL, (yyvsp[0].no), NULL);
+	(yyval.no)->lexeme= strdup((yyvsp[0].no)->lexeme);
+	cat_tac(&((yyval.no)->code),&((yyvsp[0].no)->code));
+}
+#line 2235 "y.tab.c"
+    break;
+
+  case 47:
+#line 547 "nico.y"
                        {
 	Node *no_PLUS = create_node((yylsp[-2]).first_line, soma_node, (yyvsp[-1].cadeia), NULL);
 	(yyval.no) = create_node((yylsp[-2]).first_line, soma_node, rx(t_size), (yyvsp[-2].no), no_PLUS, (yyvsp[0].no), NULL);
@@ -2092,16 +2249,16 @@ cat_tac(&((yyval.no)->code),  &((yyvsp[-1].no)->code));cat_tac(&((yyval.no)->cod
  	cat_tac(&((yyval.no)->code), &((yyvsp[0].no)->code));
 
  	append_inst_tac(&((yyval.no)->code),new_tac); 
-	char *t = malloc(sizeof(char)*12);
+	/*char *t = malloc(sizeof(char)*12);
 		sprintf(t, "lista%d.txt", file_num++);
 		FILE* file = fopen(t, "w");
-    	print_tac(file, (yyval.no)->code);
+    	print_tac(file, $$->code);*/
 	}
-#line 2101 "y.tab.c"
+#line 2258 "y.tab.c"
     break;
 
-  case 44:
-#line 442 "nico.y"
+  case 48:
+#line 565 "nico.y"
                       {
 	Node *no_MIN = create_node((yylsp[-2]).first_line, sub_node, (yyvsp[-1].cadeia), NULL);
 	(yyval.no) = create_node((yylsp[-2]).first_line, sub_node, rx(t_size), (yyvsp[-2].no), no_MIN, (yyvsp[0].no), NULL);
@@ -2117,11 +2274,11 @@ cat_tac(&((yyval.no)->code),  &((yyvsp[-1].no)->code));cat_tac(&((yyval.no)->cod
 
  	append_inst_tac(&((yyval.no)->code),new_tac);
 	}
-#line 2121 "y.tab.c"
+#line 2278 "y.tab.c"
     break;
 
-  case 45:
-#line 457 "nico.y"
+  case 49:
+#line 580 "nico.y"
                       {
 	Node *no_MULTI = create_node((yylsp[-2]).first_line, multi_node, (yyvsp[-1].cadeia), NULL);
 	(yyval.no) = create_node((yylsp[-2]).first_line, multi_node, rx(t_size), (yyvsp[-2].no), no_MULTI, (yyvsp[0].no), NULL);
@@ -2137,11 +2294,11 @@ cat_tac(&((yyval.no)->code),  &((yyvsp[-1].no)->code));cat_tac(&((yyval.no)->cod
 
  	append_inst_tac(&((yyval.no)->code),new_tac);
 	}
-#line 2141 "y.tab.c"
+#line 2298 "y.tab.c"
     break;
 
-  case 46:
-#line 472 "nico.y"
+  case 50:
+#line 595 "nico.y"
                       {
 	Node *no_BAR = create_node((yylsp[-2]).first_line, div_node, (yyvsp[-1].cadeia), NULL);
 	(yyval.no) = create_node((yylsp[-2]).first_line, div_node, rx(t_size), (yyvsp[-2].no), no_BAR, (yyvsp[0].no), NULL);
@@ -2157,23 +2314,23 @@ cat_tac(&((yyval.no)->code),  &((yyvsp[-1].no)->code));cat_tac(&((yyval.no)->cod
 
  	append_inst_tac(&((yyval.no)->code),new_tac);
 	}
-#line 2161 "y.tab.c"
+#line 2318 "y.tab.c"
     break;
 
-  case 47:
-#line 487 "nico.y"
+  case 51:
+#line 610 "nico.y"
                              {
 	Node *no_PAROPN = create_node((yylsp[-2]).first_line, abrepar_node,  (yyvsp[-2].cadeia), NULL);
 	Node *no_PARCLOSE = create_node((yylsp[-2]).first_line, fechapar_node,  (yyvsp[0].cadeia), NULL);
 	(yyval.no) = create_node((yylsp[-2]).first_line, calc_node, NULL, no_PAROPN, (yyvsp[-1].no), no_PARCLOSE, NULL);
-	
+	(yyval.no)->lexeme= strdup((yyvsp[-1].no)->lexeme);
 	cat_tac(&((yyval.no)->code),&((yyvsp[-1].no)->code));
 	}
-#line 2173 "y.tab.c"
+#line 2330 "y.tab.c"
     break;
 
 
-#line 2177 "y.tab.c"
+#line 2334 "y.tab.c"
 
       default: break;
     }
@@ -2411,7 +2568,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 498 "nico.y"
+#line 621 "nico.y"
 
  /* A partir daqui, insere-se qlqer codigo C necessario.
   */

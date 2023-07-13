@@ -109,6 +109,8 @@ typedef struct _node {
     Node_type type; /**< Um dos valores definidos acima pelos # defines. */
     void* attribute;/**< Qualquer coisa por enquanto. */
     void* local;
+    char* t;
+    char* f;
     Node_tac* code;
     struct _node** children;
     //struct _node* dad;

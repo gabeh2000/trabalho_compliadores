@@ -35,6 +35,7 @@
 	int v_desloc = 0;
 	int reg = 0;
 	int file_num = 0;
+	int rot_num = 0;
 	entry_t *new_entry(char *lx){
         entry_t *new_entry = (entry_t *)malloc(sizeof(entry_t));
         new_entry->name = strdup(lx);
@@ -140,7 +141,8 @@
 %token<cadeia> GREAT 
 %token<cadeia> STRING 
 %token<cadeia> PRINT 
-
+%token<cadeia> TRUE_
+%token<cadeia> FALSE_
 %token<cadeia> IDF 
 %token<cadeia> INT_LIT 
 %token<cadeia> F_LIT 
@@ -177,25 +179,26 @@
 
 %%
 code: comando{ $$ = create_node(@1.first_line, 0, "Root", $1, NULL); syntax_tree = $$; cat_tac(&($$->code),  &($1->code)); 
-		char *t = malloc(sizeof(char)*12);
+		/*char *t = malloc(sizeof(char)*12);
 		sprintf(t, "lista%d.txt", file_num++);
 		FILE* file = fopen(t, "w");
-    	print_tac(file, $$->code);
+    	print_tac(file, $$->code);*/
 };
 //tirar o ações do declacacoes acoes
 comando:                               { $$ = create_node(1, 0, "Vazio", NULL); }
 | declaracoes comando{ $$ = create_node(@1.first_line, code_node, NULL, $1, $2, NULL);  
-cat_tac(&($$->code),  &($1->code)); cat_tac(&($$->code),  &($2->code));
-		char *t = malloc(sizeof(char)*12);
+	cat_tac(&($$->code),  &($1->code)); cat_tac(&($$->code),  &($2->code));
+		/*char *t = malloc(sizeof(char)*12);
 		sprintf(t, "lista%d.txt", file_num++);
 		FILE* file = fopen(t, "w");
-    	print_tac(file, $$->code);}
+    	print_tac(file, $$->code);*/
+		}
 | acoes comando{ $$ = create_node(@1.first_line, code_node, NULL, $1,$2, NULL); 
-cat_tac(&($$->code),  &($1->code));cat_tac(&($$->code),  &($2->code)); 
-		char *t = malloc(sizeof(char)*12);
+	cat_tac(&($$->code),  &($1->code));cat_tac(&($$->code),  &($2->code)); 
+		/*char *t = malloc(sizeof(char)*12);
 		sprintf(t, "lista%d.txt", file_num++);
 		FILE* file = fopen(t, "w");
-    	print_tac(file, $$->code);
+    	print_tac(file, $$->code);*/
 };
 
 declaracoes: declaracao SEMICOLON { 
@@ -204,10 +207,10 @@ declaracoes: declaracao SEMICOLON {
 	$$ = create_node(@1.first_line, declaracoes_node, NULL, $1, no_SEMICOLON, NULL);
 	cat_tac(&($$->code),  &($1->code));
 	
-		char *t = malloc(sizeof(char)*12);
+		/*char *t = malloc(sizeof(char)*12);
 		sprintf(t, "lista%d.txt", file_num++);
 		FILE* file = fopen(t, "w");
-    	print_tac(file, $$->code);
+    	print_tac(file, $$->code);*/
 	
 	} 
 
@@ -215,18 +218,20 @@ declaracoes: declaracao SEMICOLON {
 
 declaracao: tipo IDF { Node *no_IDF = create_node(@1.first_line, declaracao_node, $2, NULL);
 $$ = create_node(@1.first_line, declaracao_node, NULL, $1, no_IDF, NULL);
- atrib($2);cat_tac(&($$->code),  &($1->code));
- 		char *t = malloc(sizeof(char)*12);
+ 		atrib($2);
+		Tac* tac_vazio = create_inst_tac("","","","");
+		append_inst_tac(&($$->code),tac_vazio);
+ 		/*char *t = malloc(sizeof(char)*12);
 		sprintf(t, "lista%d.txt", file_num++);
 		FILE* file = fopen(t, "w");
-    	print_tac(file, $$->code);
+    	print_tac(file, $$->code);*/
  } 
 | tipo att {$$ = create_node(@1.first_line, declaracao_node, NULL, $1, $2, NULL); cat_tac(&($$->code),  &($2->code));
 
-		char *t = malloc(sizeof(char)*12);
+		/*char *t = malloc(sizeof(char)*12);
 		sprintf(t, "lista%d.txt", file_num++);
 		FILE* file = fopen(t, "w");
-    	print_tac(file, $$->code);
+    	print_tac(file, $$->code);*/
 } ;
 
 tipo: INT {
@@ -243,11 +248,12 @@ acoes: for {$$ = create_node(@1.first_line, for_node, NULL, $1, NULL);}
 | ifelse {$$ = create_node(@1.first_line, else_node, NULL, $1, NULL);}
 | print {$$ = create_node(@1.first_line, print_node, NULL, $1, NULL);cat_tac(&($$->code),  &($1->code));}
 | att {$$ = create_node(@1.first_line, atribuicao_node, NULL, $1, NULL); cat_tac(&($$->code),  &($1->code));
-		char *t = malloc(sizeof(char)*12);
+		//printa uma lista de tac pra cada operação aritmética
+		/*char *t = malloc(sizeof(char)*12);
 		sprintf(t, "lista%d.txt", file_num++);
 		FILE* file = fopen(t, "w");
     	print_tac(file, $$->code);
-
+		fclose(file);*/
 } ;
 //| att {$$ = create_node(@1.first_line, atribuicao_node, NULL, $1, NULL);} ;
 
@@ -283,13 +289,53 @@ if: IF PAROPN expressao PARCLOSE KOPN comando KCLOSE {
 	Node *no_PARCLOSE = create_node(@1.first_line, fechapar_node,  $4, NULL);
 	Node *no_KOPN = create_node(@1.first_line, abrechaves_node,  $5, NULL);
 	Node *no_KCLOSE = create_node(@1.first_line, fechachaves_node, $7, NULL);
-	$$ = create_node(@1.first_line, iflex_node, NULL, no_IF, no_PAROPN, $3, no_PARCLOSE,no_KOPN,$6,no_KCLOSE, NULL);}; 
+	$$ = create_node(@1.first_line, iflex_node, NULL, no_IF, no_PAROPN, $3, no_PARCLOSE,no_KOPN,$6,no_KCLOSE, NULL);
 
-ifelse: if ELSE KOPN comando KCLOSE {
-	Node *no_ELSE = create_node(@1.first_line, elselex_node, $2, NULL);
-	Node *no_KOPN = create_node(@1.first_line, abrechaves_node,  $3, NULL);
-	Node *no_KCLOSE = create_node(@1.first_line, fechachaves_node, $5, NULL);
-	$$ = create_node(@1.first_line, elselex_node, NULL, $1, no_ELSE, no_KOPN, $4,no_KCLOSE, NULL); };
+	$3->t = strdup("novo_rot");
+	$3->f = strdup($$->f);
+
+	$6->f= strdup($$->f);
+
+	Tac* new_true= create_inst_tac($3->t,"",":","");
+	Tac* new_false = create_inst_tac($$->f,"",":","");
+
+	append_inst_tac(&($6->code),new_false);
+	append_inst_tac(&($3->code),new_true);
+
+	cat_tac(&($3->code),&($6->code));
+	cat_tac(&($$->code),&($3->code));
+	
+	}; 
+
+ifelse: IF PAROPN expressao PARCLOSE KOPN comando KCLOSE ELSE KOPN comando KCLOSE {
+	Node *no_IF = create_node(@1.first_line, iflex_node, $1, NULL);
+	Node *no_ELSE = create_node(@1.first_line, elselex_node, $8, NULL);
+	Node *no_KOPN = create_node(@1.first_line, abrechaves_node,  $5, NULL);
+	Node *no_KCLOSE = create_node(@1.first_line, fechachaves_node, $7, NULL);
+	Node *no_PAROPN = create_node(@1.first_line, abrepar_node,  $2, NULL);
+	Node *no_PARCLOSE = create_node(@1.first_line, fechapar_node,  $4, NULL);
+	$$ = create_node(@1.first_line, elselex_node, NULL, no_IF, no_PAROPN, $3, no_PARCLOSE,no_KOPN,$6,no_KCLOSE,no_ELSE, no_KOPN, $10,no_KCLOSE, NULL); 
+	$3->t = strdup("novo_rot");
+	$3->f = strdup("novo_rot");
+
+	$6->f = strdup($$->f);
+	$10->f = strdup($$->f);
+
+	Tac* new_true= create_inst_tac($3->t,"",":","");
+	Tac* new_goto= create_inst_tac("","","goto",$$->f);
+	Tac* new_false= create_inst_tac($3->f,"",":","");
+	Tac* new_next= create_inst_tac($$->f,"",":","");
+
+	append_inst_tac(&($10->code), new_next);
+	append_inst_tac(&($6->code), new_goto);
+	append_inst_tac(&($6->code), new_false);
+	append_inst_tac(&($3->code), new_true);
+
+	cat_tac(&($6->code),&($10->code));
+	cat_tac(&($3->code),&($6->code));
+	cat_tac(&($$->code),&($3->code));
+
+	};
 
 print: PRINT PAROPN texto PARCLOSE SEMICOLON {
 	
@@ -319,7 +365,8 @@ IDF{
 	Tac* tac_vazio = create_inst_tac("","","","");
 	entry_t* aux = lookup(symbol_table,$1);
 	t_size_now = aux->size;
-	append_inst_tac(&($$->code),tac_vazio);}
+	append_inst_tac(&($$->code),tac_vazio);
+}
 ;
 
 /*att: IDF ATRIB VALOR {$$ = create_node(@1.first_line, atribuicaolex_node, NULL, $1, $2, $3, NULL);}
@@ -360,27 +407,103 @@ att: IDF ATRIB calc {
  	append_inst_tac(&($$->code),new_tac);
 	t_size = 0;
 
-	char *t = malloc(sizeof(char)*12);
+	/*char *t = malloc(sizeof(char)*12);
 		sprintf(t, "lista%d.txt", file_num++);
 		FILE* file = fopen(t, "w");
-    	print_tac(file, $$->code);
-	};
+    	print_tac(file, $$->code);*/
+};
 
-expressao: expr {$$ = create_node(@1.first_line, expr_node, NULL, $1, NULL);} 
-| expr and_or expressao {$$ = create_node(@1.first_line, expr_node, NULL, $1, $2, $3, NULL);};
+//Aqui a gente faz os esquemas dos bool - fiz tudo errado, era pra fazer só a parte do curto-circuito
+expressao: expr {$$ = create_node(@1.first_line, expr_node, NULL, $1, NULL);
+				cat_tac(&($$->code), &($1->code));
+} 
+| expressao and_or expressao {$$ = create_node(@1.first_line, expr_node, NULL, $1, $2, $3, NULL);
+
+	if(strcmp($2->lexeme,"or")==0){
+		$1->t=strdup($$->t);
+		//↓ esse a gente vai ter que colocar algo descente dps
+		$1->f = strdup("novo_rot");
+
+		$3->t=strdup($$->t);
+		$3->f=strdup($1->f);
+
+		Tac* new_tac_lab = create_inst_tac("","","goto",$1->f);
+		/*Tac* new_tac = create_inst_tac($$->lexeme,$1->lexeme,$2->lexeme,$3->lexeme);
+		t_size_now = CHAR_SIZE;
+		t_size+=t_size_now;*/
+		
+		append_inst_tac(&($1->code),new_tac_lab);
+		cat_tac( &($1->code),&($3->code) );
+		cat_tac( &($$->code),&($1->code) );
+		//append_inst_tac(&($$->code),new_tac);
+	}
+	else{
+		$1->f=strdup($$->f);
+		//↓ esse a gente vai ter que colocar algo descente dps
+		$1->f = strdup("novo_rot");
+		
+		Tac* new_tac_lab = create_inst_tac("","","goto",$1->t);
+		append_inst_tac(&($1->code),new_tac_lab);
+		cat_tac( &($1->code),&($3->code) );
+		cat_tac( &($$->code),&($1->code) );
+	}
+
+}
+|NOT expressao {
+	Node* no_NOT = create_node(@1.first_line, idf_node, $1, NULL);
+	$$ = create_node(@1.first_line, expr_node, NULL, no_NOT,$2, NULL);
+	$2->t=strdup($$->f);
+	$2->f=strdup($$->t);
+	cat_tac( &($$->code),&($2->code) );
+	/*cat_tac( &($$->code),&($2->code) );
+	Tac* new_tac = create_inst_tac($$->lexeme,$2->lexeme,"not","");
+	t_size_now = CHAR_SIZE;
+	t_size+=t_size_now;
+	append_inst_tac(&($$->code), new_tac);*/
+} 
+| PAROPN expressao PARCLOSE { Node *no_PAROPN = create_node(@1.first_line, abrepar_node,  $1, NULL);
+	Node *no_PARCLOSE = create_node(@1.first_line, fechapar_node,  $3, NULL);
+	$$ = create_node(@1.first_line, expr_node, NULL, no_PAROPN, $2, no_PARCLOSE, NULL);
+	
+	$$->t= strdup($2->t);
+	$$->f= strdup($2->f);
+
+	cat_tac( &($$->code),&($2->code) );
+
+}
+| TRUE_{$$ = create_node(@1.first_line, lvalue_node, NULL, NULL);
+
+	Tac* tac_vazio = create_inst_tac("","","goto",$$->t);
+	append_inst_tac(&($$->code),tac_vazio);
+	/*Tac* tac_vazio = create_inst_tac($$->lexeme,"1","","");
+	t_size_now = CHAR_SIZE;
+	t_size+=t_size_now;
+	append_inst_tac(&($$->code),tac_vazio);*/
+}
+| FALSE_{$$ = create_node(@1.first_line, lvalue_node, rx(t_size), NULL);
+	Tac* tac_vazio = create_inst_tac("","","goto",$$->f);
+	append_inst_tac(&($$->code),tac_vazio);
+	/*Tac* tac_vazio = create_inst_tac($$->lexeme,"0","","");
+	t_size_now = CHAR_SIZE;
+	t_size+=t_size_now;
+	append_inst_tac(&($$->code),tac_vazio);*/
+};
 
 and_or: AND {
 $$ = create_node(@1.first_line, and_node, $1, NULL);} 
 | OR {
 	$$ = create_node(@1.first_line, or_node, $1, NULL);} ;
 
-expr: calc comparador calc {$$ = create_node(@1.first_line, aux_node, NULL, $1, $2, $3, NULL);} 
-| NOT AUX_idf_val {Node *no_NOT = create_node(@1.first_line, notlex_node, $1, NULL);
-$$ = create_node(@1.first_line, iflex_node, NULL, no_NOT, $2, NULL);};
+expr:calc{$$ = create_node(@1.first_line, aux_node, NULL, $1, NULL);}
+| calc comparador calc {$$ = create_node(@1.first_line, aux_node, NULL, $1, $2, $3, NULL);
+	Tac* tac_true = create_inst_tac($$->t,$1->lexeme,$2->lexeme,$3->lexeme);
+	Tac* tac_false = create_inst_tac("","","goto",$$->f);
+	append_inst_tac(&($2->code),tac_true);
+	append_inst_tac(&($2->code),tac_false);
+	cat_tac( &($1->code),&($2->code) );
+	cat_tac( &($$->code),&($1->code) );
 
-/*AUX_expr: AUX_idf_val {$$ = create_node(@1.first_line, idf_node, NULL, $1, NULL);} 
-| calc {$$ = create_node(@1.first_line, calc_node, NULL, $1, NULL);} ;*/
-
+} ;
 
 //Criar codes com atributos vazios
 AUX_idf_val: IDF {
@@ -418,7 +541,8 @@ comparador: GREAT {
 
 calc:
 //concatenar coisas aqui
-AUX_idf_val {$$ = create_node(@1.first_line, lvalue_node, $1->lexeme, $1, NULL);
+AUX_idf_val {$$ = create_node(@1.first_line, lvalue_node, NULL, $1, NULL);
+	$$->lexeme= strdup($1->lexeme);
 	cat_tac(&($$->code),&($1->code));
 }
 | calc PLUS calc       {
@@ -434,10 +558,10 @@ AUX_idf_val {$$ = create_node(@1.first_line, lvalue_node, $1->lexeme, $1, NULL);
  	cat_tac(&($$->code), &($3->code));
 
  	append_inst_tac(&($$->code),new_tac); 
-	char *t = malloc(sizeof(char)*12);
+	/*char *t = malloc(sizeof(char)*12);
 		sprintf(t, "lista%d.txt", file_num++);
 		FILE* file = fopen(t, "w");
-    	print_tac(file, $$->code);
+    	print_tac(file, $$->code);*/
 	}
 | calc MIN calc       {
 	Node *no_MIN = create_node(@1.first_line, sub_node, $2, NULL);
@@ -488,7 +612,7 @@ AUX_idf_val {$$ = create_node(@1.first_line, lvalue_node, $1->lexeme, $1, NULL);
 	Node *no_PAROPN = create_node(@1.first_line, abrepar_node,  $1, NULL);
 	Node *no_PARCLOSE = create_node(@1.first_line, fechapar_node,  $3, NULL);
 	$$ = create_node(@1.first_line, calc_node, NULL, no_PAROPN, $2, no_PARCLOSE, NULL);
-	
+	$$->lexeme= strdup($2->lexeme);
 	cat_tac(&($$->code),&($2->code));
 	} ;
 

@@ -281,7 +281,42 @@ while: WHILE PAROPN expressao PARCLOSE KOPN comando KCLOSE {
 	Node *no_PARCLOSE = create_node(@1.first_line, fechapar_node,  $4, NULL);
 	Node *no_KOPN = create_node(@1.first_line, abrechaves_node,  $5, NULL);
 	Node *no_KCLOSE = create_node(@1.first_line, fechachaves_node, $7, NULL);
-	$$ = create_node(@1.first_line, whilelex_node, NULL, no_WHILE, no_PAROPN, $3, no_PARCLOSE, no_KOPN,$6, no_KCLOSE, NULL);};
+	$$ = create_node(@1.first_line, whilelex_node, NULL, no_WHILE, no_PAROPN, $3, no_PARCLOSE, no_KOPN,$6, no_KCLOSE, NULL);
+	
+	char *t = malloc(sizeof(char)*12);
+	sprintf(t, "novo_rot%d", rot_num++);
+	$$->f = strdup(t);
+
+	$3->f = strdup($$->f);
+
+	char *t2 = malloc(sizeof(char)*12);
+	sprintf(t2, "novo_rot%d", rot_num++);
+	$3->t = strdup(t2);
+
+	char *t3 = malloc(sizeof(char)*12);
+	sprintf(t3, "novo_rot%d", rot_num++);
+	$$->t = strdup(t3);
+
+	$6->f = strdup($$->t);
+
+	Tac* new_begin= create_inst_tac($$->t,"",":","");
+	Tac* new_bt= create_inst_tac($3->t,"",":","");
+	Tac* new_goto= create_inst_tac("","","goto",$$->t);
+	Tac* new_next = create_inst_tac($$->f,"",":","");
+
+
+	append_inst_tac(&($6->code), new_goto);
+	append_inst_tac(&($6->code), new_next);
+
+	append_inst_tac(&($3->code), new_bt);
+
+	append_inst_tac(&($$->code), new_begin);
+
+	cat_tac(&($3->code), &($6->code));
+
+	cat_tac(&($$->code), &($3->code));
+
+	};
 
 if: IF PAROPN expressao PARCLOSE KOPN comando KCLOSE {
 	Node *no_IF = create_node(@1.first_line, iflex_node, $1, NULL);
@@ -290,14 +325,19 @@ if: IF PAROPN expressao PARCLOSE KOPN comando KCLOSE {
 	Node *no_KOPN = create_node(@1.first_line, abrechaves_node,  $5, NULL);
 	Node *no_KCLOSE = create_node(@1.first_line, fechachaves_node, $7, NULL);
 	$$ = create_node(@1.first_line, iflex_node, NULL, no_IF, no_PAROPN, $3, no_PARCLOSE,no_KOPN,$6,no_KCLOSE, NULL);
-	$$->f = strdup("novo_rot");
+	char *t = malloc(sizeof(char)*12);
+	sprintf(t, "novo_rot%d", rot_num++);
+	$$->f = strdup(t);
 
-	$3->t = strdup("novo_rot");
+	char *t2 = malloc(sizeof(char)*12);
+	sprintf(t2, "novo_rot%d", rot_num++);
+
+	$3->t = strdup(t2);
 	$3->f = strdup($$->f);
 
 	$6->f= strdup($$->f);
 
-	Tac* new_true= create_inst_tac($3->t,"",":","");//label1:
+	Tac* new_true= create_inst_tac($3->t,"",":","");
 	Tac* new_false = create_inst_tac($$->f,"",":","");
 
 	append_inst_tac(&($6->code),new_false);
@@ -316,8 +356,18 @@ ifelse: IF PAROPN expressao PARCLOSE KOPN comando KCLOSE ELSE KOPN comando KCLOS
 	Node *no_PAROPN = create_node(@1.first_line, abrepar_node,  $2, NULL);
 	Node *no_PARCLOSE = create_node(@1.first_line, fechapar_node,  $4, NULL);
 	$$ = create_node(@1.first_line, elselex_node, NULL, no_IF, no_PAROPN, $3, no_PARCLOSE,no_KOPN,$6,no_KCLOSE,no_ELSE, no_KOPN, $10,no_KCLOSE, NULL); 
-	$3->t = strdup("novo_rot");
-	$3->f = strdup("novo_rot");
+	char *t = malloc(sizeof(char)*12);
+	sprintf(t, "novo_rot%d", rot_num++);
+	$$->f = strdup(t);
+
+	char *t2 = malloc(sizeof(char)*12);
+	sprintf(t2, "novo_rot%d", rot_num++);
+
+	$3->t = strdup(t2);
+
+	char *t3 = malloc(sizeof(char)*12);
+	sprintf(t3, "novo_rot%d", rot_num++);
+	$3->f = strdup(t3);
 
 	$6->f = strdup($$->f);
 	$10->f = strdup($$->f);
@@ -423,7 +473,10 @@ expressao: expr {$$ = create_node(@1.first_line, expr_node, NULL, $1, NULL);
 	if(strcmp($2->lexeme,"or")==0){
 		$1->t=strdup($$->t);
 		//↓ esse a gente vai ter que colocar algo descente dps
-		$1->f = strdup("novo_rot");
+
+		char *t = malloc(sizeof(char)*12);
+		sprintf(t, "novo_rot%d", rot_num++);
+		$1->f = strdup(t);
 
 		$3->t=strdup($$->t);
 		$3->f=strdup($1->f);
@@ -441,7 +494,9 @@ expressao: expr {$$ = create_node(@1.first_line, expr_node, NULL, $1, NULL);
 	else{
 		$1->f=strdup($$->f);
 		//↓ esse a gente vai ter que colocar algo descente dps
-		$1->f = strdup("novo_rot");
+		char *t = malloc(sizeof(char)*12);
+		sprintf(t, "novo_rot%d", rot_num++);
+		$1->f = strdup(t);
 		
 		Tac* new_tac_lab = create_inst_tac("","","goto",$1->t);
 		append_inst_tac(&($1->code),new_tac_lab);

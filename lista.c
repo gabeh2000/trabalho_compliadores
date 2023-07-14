@@ -31,11 +31,22 @@ Tac* create_inst_tac(const char* res, const char* arg1,const char* op, const cha
 void print_inst_tac(FILE* out, Tac i){
     char * opr = strdup("");
 
-    if(strcmp(i.op,"PRINT")==0){
+    if(strcmp(i.op,"goto")==0){
+        fprintf(out, "goto %s \n",i.arg2);
+
+    }
+    else if(strcmp(i.op,":")==0){
+        fprintf(out, "%s : \n",i.res);
+
+    }
+    else if(strcmp(i.res,"novo_rot")>0){
+        fprintf(out, "if %s %s %s goto %s\n",i.arg1, i.op, i.arg2, i.res);
+    }
+    else if(strcmp(i.op,"PRINT")==0){
         fprintf(out, "PRINT %s \n",i.res);
         
     }
-    else{
+    else if(strcmp(i.op,"")!=0){
         if(strchr(i.arg1,'.')!=NULL){
             if(strcmp(i.op,"+")==0){
                 char* aux = "FADD";

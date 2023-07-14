@@ -1,11 +1,8 @@
 #include<stdio.h>
+#include<string.h>
+
 
 int main(){
-    if(!(1+2+3)){
-    }
-    else{
-        printf("Deu certo, quem diria\n");
-
-    }
+    printf("%d",strcmp("novo_rot","novo_rot10"));
     return 0;
 }

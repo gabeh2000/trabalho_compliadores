@@ -244,8 +244,8 @@ tipo: INT {
 
 acoes: for {$$ = create_node(@1.first_line, for_node, NULL, $1, NULL);} 
 | while {$$ = create_node(@1.first_line, while_node, NULL, $1, NULL);}
-| if {$$ = create_node(@1.first_line, if_node, NULL, $1, NULL);}
-| ifelse {$$ = create_node(@1.first_line, else_node, NULL, $1, NULL);}
+| if {$$ = create_node(@1.first_line, if_node, NULL, $1, NULL);cat_tac(&($$->code),  &($1->code));}
+| ifelse {$$ = create_node(@1.first_line, else_node, NULL, $1, NULL);cat_tac(&($$->code),  &($1->code));}
 | print {$$ = create_node(@1.first_line, print_node, NULL, $1, NULL);cat_tac(&($$->code),  &($1->code));}
 | att {$$ = create_node(@1.first_line, atribuicao_node, NULL, $1, NULL); cat_tac(&($$->code),  &($1->code));
 		//printa uma lista de tac pra cada operação aritmética
@@ -290,13 +290,14 @@ if: IF PAROPN expressao PARCLOSE KOPN comando KCLOSE {
 	Node *no_KOPN = create_node(@1.first_line, abrechaves_node,  $5, NULL);
 	Node *no_KCLOSE = create_node(@1.first_line, fechachaves_node, $7, NULL);
 	$$ = create_node(@1.first_line, iflex_node, NULL, no_IF, no_PAROPN, $3, no_PARCLOSE,no_KOPN,$6,no_KCLOSE, NULL);
+	$$->f = strdup("novo_rot");
 
 	$3->t = strdup("novo_rot");
 	$3->f = strdup($$->f);
 
 	$6->f= strdup($$->f);
 
-	Tac* new_true= create_inst_tac($3->t,"",":","");
+	Tac* new_true= create_inst_tac($3->t,"",":","");//label1:
 	Tac* new_false = create_inst_tac($$->f,"",":","");
 
 	append_inst_tac(&($6->code),new_false);
@@ -496,7 +497,7 @@ $$ = create_node(@1.first_line, and_node, $1, NULL);}
 
 expr:calc{$$ = create_node(@1.first_line, aux_node, NULL, $1, NULL);}
 | calc comparador calc {$$ = create_node(@1.first_line, aux_node, NULL, $1, $2, $3, NULL);
-	Tac* tac_true = create_inst_tac($$->t,$1->lexeme,$2->lexeme,$3->lexeme);
+	Tac* tac_true = create_inst_tac($$->t,$1->lexeme,$2->lexeme,$3->lexeme);//“if” E1.local relop.lexval E2.local “goto” B.t)
 	Tac* tac_false = create_inst_tac("","","goto",$$->f);
 	append_inst_tac(&($2->code),tac_true);
 	append_inst_tac(&($2->code),tac_false);
@@ -552,12 +553,12 @@ AUX_idf_val {$$ = create_node(@1.first_line, lvalue_node, NULL, $1, NULL);
 	Tac* new_tac = create_inst_tac($$->lexeme,$1->lexeme,$2,$3->lexeme);
 
 	printf("\n\n Tac dentro do calc %s := %s %s %s \n",$$->lexeme,$1->lexeme,$2,$3->lexeme);
+	append_inst_tac(&($3->code),new_tac);
+ 	cat_tac(&($1->code), &($3->code));
 
  	cat_tac(&($$->code), &($1->code));
 
- 	cat_tac(&($$->code), &($3->code));
-
- 	append_inst_tac(&($$->code),new_tac); 
+ 	 
 	/*char *t = malloc(sizeof(char)*12);
 		sprintf(t, "lista%d.txt", file_num++);
 		FILE* file = fopen(t, "w");
